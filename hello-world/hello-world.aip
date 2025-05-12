@@ -1,0 +1,34 @@
+
+# Data
+
+```lua
+-- aip run hello-world.aip
+-- aip run hello-world -i "My name is Jen" -i "I am Jon"
+
+local some_data = input or "My name is John"
+
+return {
+    some_data = some_data
+}
+```
+
+> Remove `DISABLED` below to send instruction to AI
+
+# Instruction
+
+Generate a single, thoughtful, and warm greeting to: {{data.some_data}}
+
+# Output 
+
+```lua
+
+-- Debug Print
+print("\ndebug print data: " .. aip.lua.dump(data) .. "\n")
+
+-- Extract ai_response content or input
+local response = ai_response and ai_response.content or data.some_data
+
+aip.file.append("_data-hello-world/answers.md", response .. "\n\n----\n\n")
+
+return data.some_data
+```

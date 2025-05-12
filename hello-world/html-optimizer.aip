@@ -1,0 +1,70 @@
+# Options
+
+```toml
+# This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
+
+model = "gemini-2.5-flash-preview-04-17"
+
+# temperature = 0.0 
+# input_concurrency = 6
+```
+
+# Data
+
+```lua
+-- aip run html-optimizer.aip
+
+local URL = "https://www.alchemy.com/docs/reference/token-api-quickstart"
+
+local BASE_DATA_DIR = "_data-html-optimizer"
+
+local html_res     = aip.web.get(URL)
+local html_content = html_res.content
+
+local original_html_path = BASE_DATA_DIR .. "/token-api-quickstart.html"
+aip.file.save(original_html_path, html_content)
+
+local html_slim_file = aip.file.save_html_to_slim(original_html_path)
+
+local md_slim_file = aip.file.save_html_to_md(html_slim_file.path)
+
+md_slim_file = aip.file.load(md_slim_file.path)
+
+return {
+    md_slim_file = md_slim_file
+}
+```
+
+> Remove `DISABLED` below to send instruction to AI
+
+# Instruction
+
+You need to clean up the markdown:
+- Make it well-structured, with markdown sections. 
+- Identify possible code blocks:
+  - Remove line numbers.
+  - Wrap them in markdown code blocks with the appropriate language.
+  - Only use 'json' language for valid json content, otherwise 'js' for js like, or 'text'
+  - Indent the code properly.
+
+````md
+{{data.md_slim_file.content}}
+````
+
+Return the full file content as is without 
+the surrounding in a markdown code block.
+
+# Output 
+
+```lua
+
+local content = ai_response.content
+content = aip.md.outer_block_content_or_raw(content)
+
+local dest_path = data.md_slim_file.path:gsub("-slim","-clean")
+aip.file.save(dest_path, content)
+
+-- aip.file.append("answers.md", response .. "\n\n----\n\n")
+
+return data.md_slim_file.path
+```
