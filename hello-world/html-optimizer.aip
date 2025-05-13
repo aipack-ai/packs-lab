@@ -41,10 +41,11 @@ return {
 
 You need to clean up the markdown:
 - Make it well-structured, with markdown sections. 
+- Use the `-` character for bullet points.
 - Identify possible code blocks:
   - Remove line numbers.
   - Wrap them in markdown code blocks with the appropriate language.
-  - Only use 'json' language for valid json content, otherwise 'js' for js like, or 'text'
+  - Only use code block language 'json' for valid json content, otherwise 'js' for js like, or 'text'
   - Indent the code properly.
 
 ````md
