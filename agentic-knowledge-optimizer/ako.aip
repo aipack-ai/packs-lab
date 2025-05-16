@@ -1,0 +1,79 @@
+# Options
+
+```toml
+# This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
+
+model = "gemini-2.5-flash-preview-04-17"
+
+# temperature = 0.0 
+# input_concurrency = 6
+```
+
+# Data
+
+```lua
+-- aip run html-optimizer.aip
+
+-- Code Documentation Example
+local URL_STR = "https://www.alchemy.com/docs/reference/token-api-quickstart"
+-- Knowledge
+-- local URL_STR = "https://cookbook.openai.com/examples/gpt4-1_prompting_guide"
+
+local url_obj   = aip.web.parse_url(URL_STR)
+local url       = url_obj.url
+local host      = url_obj.host
+local base_stem = aip.path.parse(url_obj.path).stem
+
+local base_data_dir = "_data/" .. base_stem
+
+local html_res     = aip.web.get(url)
+local html_content = html_res.content
+
+local original_html_path = base_data_dir .. "/" .. base_stem .. ".html"
+aip.file.save(original_html_path, html_content)
+
+local html_slim_file = aip.file.save_html_to_slim(original_html_path)
+
+local md_slim_file = aip.file.save_html_to_md(html_slim_file.path)
+
+md_slim_file = aip.file.load(md_slim_file.path)
+
+return {
+    md_slim_file = md_slim_file
+}
+```
+
+> Remove `DISABLED` below to send instruction to AI
+
+# Instruction
+
+You need to clean up the markdown:
+- Make it well-structured, with markdown sections. 
+- Use the `-` character for bullet points.
+- Identify possible code blocks:
+  - Remove line numbers.
+  - Wrap them in markdown code blocks with the appropriate language.
+  - Only use code block language 'json' for valid json content, otherwise 'js' for js like, or 'text'
+  - Indent the code properly.
+
+````md
+{{data.md_slim_file.content}}
+````
+
+Return the full file content as is without 
+the surrounding in a markdown code block.
+
+# Output 
+
+```lua
+
+local content = ai_response.content
+content = aip.md.outer_block_content_or_raw(content)
+
+local dest_path = data.md_slim_file.path:gsub("-slim","-clean")
+aip.file.save(dest_path, content)
+
+-- aip.file.append("answers.md", response .. "\n\n----\n\n")
+
+return data.md_slim_file.path
+```

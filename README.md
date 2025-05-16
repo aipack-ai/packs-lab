@@ -10,9 +10,11 @@ For example:
 
 ```sh
 cd hello-world
-aip run my-agent
+aip run hello-world
+
 ```
 
 ## List of Lab Projects
 
-- [hello-world](/hello-world/) - [Video](https://news.aipack.ai/p/aipack-tutorial-from-hello-world)
+- [hello-world](/hello-world/README.md) - [Video](https://news.aipack.ai/p/aipack-tutorial-from-hello-world)
+- [agentic-knowledge-optimizer (AKO)](/agentic-knowledge-optimizer/README.md)
