@@ -1,7 +1,7 @@
 # This `.aipack/config.toml` file overrides the base `~/.aipack-base/config.toml`.
 # Any property from the base config.toml can be overridden here for this workspace (the workspace is the parent directory of this .aipack/ directory).
 
-[default_options]
+[options]
 
 # `model` is required (any model supported by the Rust genai crate)
 #         By default, it is set in the `~/.aipack-base/config.toml`, but it can be overridden here,
@@ -30,8 +30,7 @@ model = "gemini-2.5-flash-preview-04-17-zero" # or an alias from below (e.g., "f
 # The ones below are already configured in the ~/.aipack-base/config.toml
 # However, you can add new aliases or override them below (in this workspace config.toml). 
 #
-# [default_options.model_aliases]
-[default_options.model_aliases]
+# [options.model_aliases]
 # # -- Anthropic
 # claude      = "claude-3-7-sonnet-latest"
 # # -- OpenAI
