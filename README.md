@@ -14,6 +14,13 @@ aip run hello-world
 
 ```
 
+NOTE: Make sure to have AIPACK Version `aip -V` `=> 0.7.10`
+
+```sh
+$ aip -V
+aipack 0.7.10
+```
+
 ## List of Lab Projects
 
 - [hello-world](/hello-world/README.md) - [Video](https://news.aipack.ai/p/aipack-tutorial-from-hello-world)
