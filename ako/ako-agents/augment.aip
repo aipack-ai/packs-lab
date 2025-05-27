@@ -1,0 +1,106 @@
+# Options
+
+```toml
+# This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
+
+model = "flash"
+
+input_concurrency = 6
+
+# temperature = 0.0 
+```
+
+# Before All
+
+```lua
+local BASE_OUT_DIR = "_ako-out"
+
+local input = inputs and inputs[1] or nil
+
+local config_path = "ako-config.json"
+config_path = input and type(input) == "string" and input or config_path
+local config = aip.file.load_json(config_path)
+
+local host = aip.web.parse_url(config.base_url).host
+local base_data_dir = BASE_OUT_DIR .. "/" .. host
+
+local raw_base_dir = base_data_dir .. "/2-raw-md"
+
+local files = aip.file.list(base_data_dir .. "/**/*.md")
+
+-- files = { files[1] }
+
+return aip.flow.before_all_response({
+    inputs     = files,
+--  options    = { 
+--      input_concurrency = 12, 
+--      model = "flash"
+--  },
+    before_all = {
+        raw_base_dir = raw_base_dir
+    }
+})
+
+```
+
+# Data
+
+```lua
+
+local raw_md_file = input
+
+local dest_dir = aip.path.parse(before_all.raw_base_dir).dir .. "/3-final-md"
+
+-- local DEST_BASE_DIR = "_data/www.alchemy.com/3-final-md"
+local rel_path      = aip.path.diff(raw_md_file.path, before_all.raw_base_dir)
+local dest_path     = dest_dir .. "/" .. rel_path
+
+-- if the dest path already exist, we skip
+if aip.path.exists(dest_path) then
+    return aip.flow.skip("Final file '" .. dest_path .. "' already exist. So, skipping")
+end
+
+raw_md_file = aip.file.load(raw_md_file.path)
+
+return {
+    raw_md_file = raw_md_file,
+    dest_path   = dest_path
+}
+```
+
+> Remove `DISABLED` below to send instruction to AI
+
+# Instruction
+
+You need to clean up the markdown:
+- Make it well-structured, with markdown sections. 
+- Remove site navigation section. Just page content should be kept
+- Use the `-` character for bullet points.
+- Sometime the markdown link text has extract empty line, make sure they are all in one line. So, inside the `[ ... ]` should not have new line. 
+- Identify possible code blocks:
+  - Remove line numbers.
+  - Wrap them in markdown code blocks with the appropriate language.
+  - Only use code block language 'json' for valid json content, otherwise 'js' for js like, or 'text'
+  - Indent the code properly.
+
+````md
+{{data.raw_md_file.content}}
+````
+
+Return the full file content as is without 
+the surrounding in a markdown code block.
+
+
+# Output 
+
+```lua
+
+local content = ai_response.content
+content = aip.md.outer_block_content_or_raw(content)
+
+aip.file.save(data.dest_path, content)
+
+-- aip.file.append("answers.md", response .. "\n\n----\n\n")
+
+return "DONE .. " .. data.dest_path
+```

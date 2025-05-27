@@ -1,0 +1,9 @@
+# Output
+
+```lua
+
+aip.agent.run("slim")
+
+aip.agent.run("augment")
+
+```

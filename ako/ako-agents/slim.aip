@@ -1,0 +1,98 @@
+# Data
+
+```lua
+-- Static Config
+local BASE_OUT_DIR = "_ako-out"
+
+-- Load Config
+local config_path = "ako-config.json"
+config_path = type(input) == "string" and input or config_path
+local config = aip.file.load_json(config_path)
+
+local BASE_URL       = config.base_url
+local FIRST_PAGE     = config.first_page
+local FILTER_PATH    = config.filter_path
+local MAX_PAGES      = config.max_pages
+
+local global_page_counter = 0
+
+function process_url(url_str)
+  local url_obj   = aip.web.parse_url(url_str)
+
+  local url       = url_obj.url
+  local host      = url_obj.host
+  local path_obj  = aip.path.parse(url_obj.path)
+  local stem      = path_obj.stem
+  if stem == "" then
+    stem = "index"
+  end
+  local base_path = path_obj.dir .. "/" .. stem
+
+  local base_data_dir = BASE_OUT_DIR .. "/" .. host
+
+  local html_res     = aip.web.get(url)
+  local html_content = html_res.content
+
+  local original_html_path = base_data_dir .. "/0-original/" .. base_path .. ".html"
+  local original_html_file = aip.file.save(original_html_path, html_content)
+
+  local links = aip.html.select(html_content, "a[href]")
+
+  local slim_html_path =  base_data_dir .. "/1-slim-html/" .. base_path .. ".html"
+  local html_slim_file = aip.file.save_html_to_slim(original_html_path, slim_html_path)
+
+  local raw_md_path = base_data_dir .. "/2-raw-md/" .. base_path .. ".md"
+  local raw_md_file = aip.file.save_html_to_md(slim_html_path, raw_md_path)
+
+  global_page_counter = global_page_counter + 1
+
+  return {
+    original_html_file = original_html_file,
+    html_slim_file     = html_slim_file,
+    raw_md_file        = raw_md_file,
+    links              = links,
+  }
+
+end
+
+function process_links(links, page_urls_map) 
+  local links_queue = {}
+  for i, link in ipairs(links) do
+      local href      = aip.web.resolve_href(link.attrs.href, BASE_URL)
+      local url_obj   = aip.web.parse_url(href)
+      local page_url  = url_obj.page_url
+      local url_path  = url_obj.path
+      local url       = url_obj.url
+
+      if global_page_counter >= MAX_PAGES then
+        return links_queue
+      end
+
+      -- if href starts with FILTER_PATH
+      if url:sub(1, #BASE_URL) == BASE_URL and url_path:sub(1, #FILTER_PATH) == FILTER_PATH then
+        if not page_urls_map[page_url] then
+          local links = process_url(page_url).links
+          table.insert(links_queue, links)
+          page_urls_map[page_url] = true
+        end
+      end
+  end
+  return links_queue
+end
+
+-- Map of all of the page_url already processed
+local page_urls_map = {}
+
+-- Process initial page, links in the page
+local links       = process_url(FIRST_PAGE).links
+page_urls_map[FIRST_PAGE] = true
+
+-- Process the links and get a links_queue
+local links_queue = process_links(links, page_urls_map)
+
+-- Final process of each links in the links_queue
+-- Note: We do not go recursive, just one level down
+for i, links in ipairs(links_queue) do
+  process_links(links, page_urls_map)
+end
+```

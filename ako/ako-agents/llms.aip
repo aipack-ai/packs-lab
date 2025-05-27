@@ -1,0 +1,43 @@
+# Data
+
+```lua
+
+-- Load Config
+local config_path = "ako-config.json"
+config_path = type(input) == "string" and input or config_path
+local config = aip.file.load_json(config_path)
+
+
+return {
+    host = 
+}
+
+```
+
+# System
+
+
+You are an agent that create `llms.txt` in markdown from a list of files and their content. 
+
+Here is the llms.txt format/guideline
+
+```
+At the moment the most widely and easily understood format for language models is Markdown. Simply showing where key Markdown files can be found is a great first step. Providing some basic structure helps a language model to find where the information it needs can come from.
+
+The llms.txt file is unusual in that it uses Markdown to structure the information rather than a classic structured format such as XML. The reason for this is that we expect many of these files to be read by language models and agents. Having said that, the information in llms.txt follows a specific format and can be read using standard programmatic-based tools.
+
+The llms.txt file spec is for files located in the root path /llms.txt of a website (or, optionally, in a subpath). A file following the spec contains the following sections as markdown, in the specific order:
+
+An H1 with the name of the project or site. This is the only required section
+A blockquote with a short summary of the project, containing key information necessary for understanding the rest of the file
+Zero or more markdown sections (e.g. paragraphs, lists, etc) of any type except headings, containing more detailed information about the project and how to interpret the provided files
+Zero or more markdown sections delimited by H2 headers, containing “file lists” of URLs where further detail is available
+Each “file list” is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes about the file.
+```
+
+# Output
+
+```lua
+
+
+```
