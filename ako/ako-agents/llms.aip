@@ -1,25 +1,33 @@
+# Options
+
+```toml
+model = "gemini-2.5-flash-preview-04-17"
+```
+
 # Data
 
 ```lua
+local p_utils = require("prompt_utils")
 
--- Load Config
-local config_path = "ako-config.json"
-config_path = type(input) == "string" and input or config_path
-local config = aip.file.load_json(config_path)
+local settings = p_utils.load_settings(input)
 
+local glob = settings.dir_2_raw_md .. "/**/*.md"
+local files = aip.file.list_load(glob)
+
+print("... " .. glob .. "\n" .. aip.lua.dump(settings))
 
 return {
-    host = 
+    files          = files,
+    dir_3_final_md = settings.dir_3_final_md
 }
 
 ```
 
 # System
 
-
 You are an agent that create `llms.txt` in markdown from a list of files and their content. 
 
-Here is the llms.txt format/guideline
+Here is the llms.txt format/guideline, and the user will give you all of the files.
 
 ```
 At the moment the most widely and easily understood format for language models is Markdown. Simply showing where key Markdown files can be found is a great first step. Providing some basic structure helps a language model to find where the information it needs can come from.
@@ -35,9 +43,29 @@ Zero or more markdown sections delimited by H2 headers, containing “file lists
 Each “file list” is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes about the file.
 ```
 
+# Instruction
+
+Here are all of the files we need to build a llms.txt for. 
+
+{{#each data.files}}
+{{this.path}}
+```{{this.ext}}
+{{this.content}}
+```
+
+{{/each}}
+
 # Output
 
 ```lua
 
+if ai_response == nil then
+  return "no AI Response"
+end
+
+-- remove the eventual block content
+local content = aip.md.outer_block_content_or_raw(ai_response.content)
+
+aip.file.save(data.dir_3_final_md .. "/llms.txt", content)
 
 ```

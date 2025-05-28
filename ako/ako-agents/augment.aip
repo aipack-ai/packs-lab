@@ -3,9 +3,9 @@
 ```toml
 # This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
 
-model = "flash"
+model = "gemini-2.5-flash-preview-04-17"
 
-input_concurrency = 6
+input_concurrency = 12
 
 # temperature = 0.0 
 ```
