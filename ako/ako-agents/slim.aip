@@ -3,14 +3,14 @@
 ```lua
 local p_utils = require("prompt_utils")
 
-local settings = p_utils.load_settings(input)
+local SETTINGS = p_utils.load_settings(input)
 
-local config = settings.config
+local CONFIG = SETTINGS.config
 
-local BASE_URL       = config.base_url
-local FIRST_PAGE     = config.first_page
-local FILTER_PATH    = config.filter_path
-local MAX_PAGES      = config.max_pages
+local BASE_URL       = CONFIG.base_url
+local FIRST_PAGE     = CONFIG.first_page
+local FILTER_PATH    = CONFIG.filter_path
+local MAX_PAGES      = CONFIG.max_pages
 
 local global_page_counter = 0
 
@@ -29,15 +29,15 @@ function process_url(url_str)
   local html_res     = aip.web.get(url)
   local html_content = html_res.content
 
-  local original_html_path = settings.dir_0_original .. "/" .. base_path .. ".html"
+  local original_html_path = SETTINGS.dir_0_original .. "/" .. base_path .. ".html"
   local original_html_file = aip.file.save(original_html_path, html_content)
 
   local links = aip.html.select(html_content, "a[href]")
 
-  local slim_html_path =  settings.dir_1_slim_html .. "/" .. base_path .. ".html"
+  local slim_html_path =  SETTINGS.dir_1_slim_html .. "/" .. base_path .. ".html"
   local html_slim_file = aip.file.save_html_to_slim(original_html_path, slim_html_path)
 
-  local raw_md_path = settings.dir_2_raw_md .. "/" .. base_path .. ".md"
+  local raw_md_path = SETTINGS.dir_2_raw_md .. "/" .. base_path .. ".md"
   local raw_md_file = aip.file.save_html_to_md(slim_html_path, raw_md_path)
 
   global_page_counter = global_page_counter + 1
