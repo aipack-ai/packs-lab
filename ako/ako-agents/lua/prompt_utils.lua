@@ -12,8 +12,6 @@ function load_settings(input)
 
   local base_data_dir = BASE_OUT_DIR .. "/" .. url_obj.host
 
-
-
   return {
     config         = config,
     base_url_obj   = base_url_obj,
