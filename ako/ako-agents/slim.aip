@@ -1,13 +1,11 @@
 # Data
 
 ```lua
--- Static Config
-local BASE_OUT_DIR = "_ako-out"
+local p_utils = require("prompt_utils")
 
--- Load Config
-local config_path = "ako-config.json"
-config_path = type(input) == "string" and input or config_path
-local config = aip.file.load_json(config_path)
+local settings = p_utils.load_settings(input)
+
+local config = settings.config
 
 local BASE_URL       = config.base_url
 local FIRST_PAGE     = config.first_page
@@ -28,20 +26,18 @@ function process_url(url_str)
   end
   local base_path = path_obj.dir .. "/" .. stem
 
-  local base_data_dir = BASE_OUT_DIR .. "/" .. host
-
   local html_res     = aip.web.get(url)
   local html_content = html_res.content
 
-  local original_html_path = base_data_dir .. "/0-original/" .. base_path .. ".html"
+  local original_html_path = settings.dir_0_original .. "/" .. base_path .. ".html"
   local original_html_file = aip.file.save(original_html_path, html_content)
 
   local links = aip.html.select(html_content, "a[href]")
 
-  local slim_html_path =  base_data_dir .. "/1-slim-html/" .. base_path .. ".html"
+  local slim_html_path =  settings.dir_1_slim_html .. "/" .. base_path .. ".html"
   local html_slim_file = aip.file.save_html_to_slim(original_html_path, slim_html_path)
 
-  local raw_md_path = base_data_dir .. "/2-raw-md/" .. base_path .. ".md"
+  local raw_md_path = settings.dir_2_raw_md .. "/" .. base_path .. ".md"
   local raw_md_file = aip.file.save_html_to_md(slim_html_path, raw_md_path)
 
   global_page_counter = global_page_counter + 1
