@@ -1,12 +1,13 @@
 # Output
 
 ```lua
+local inputs = input and {input} or nil
 
-aip.agent.run("slim")
+aip.agent.run("slim", {inputs = inputs})
 
-aip.agent.run("augment")
+aip.agent.run("augment", {inputs = inputs})
 
-aip.agent.run("llms")
+aip.agent.run("llms", {inputs = inputs})
 
 return "ALL DONE !!!!"
 
