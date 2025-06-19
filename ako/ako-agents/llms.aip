@@ -14,7 +14,7 @@ local settings = p_utils.load_settings(input)
 local glob = settings.dir_2_raw_md .. "/**/*.md"
 local files = aip.file.list_load(glob)
 
-print("... " .. glob .. "\n" .. aip.lua.dump(settings))
+-- print("... " .. settings .. "\n" .. aip.lua.dump(settings))
 
 return {
     files          = files,

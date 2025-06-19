@@ -3,7 +3,7 @@
 ```toml
 # This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
 
-model = "gemini-2.5-flash-preview-04-17"
+model = "gemini-2.5-flash"
 
 input_concurrency = 12
 

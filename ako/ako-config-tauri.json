@@ -1,0 +1,6 @@
+{
+	   "base_url": "https://tauri.app/",
+	 "first_page": "https://tauri.app/reference/acl/capability/",
+	"filter_path": "/reference/",
+	  "max_pages":  20
+}
