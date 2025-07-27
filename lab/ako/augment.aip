@@ -1,13 +1,8 @@
 # Options
 
 ```toml
-# This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
-
-model = "mini"
-
-input_concurrency = 25
-
-# temperature = 0.0 
+# Here can set default agent model, temperature, and input_concurrency
+temperature = 0.0 
 ```
 
 # Before All
@@ -15,11 +10,23 @@ input_concurrency = 25
 ```lua
 local p_utils = require("prompt_utils")
 
+-- Get the first input (optional name of the config file) or nil
 local input = inputs and inputs[1] or nil
 
-local SETTINGS = p_utils.load_settings(input)
+-- input is nil or the config_path
+local init_res = p_utils.init_config(input)
 
-local files = aip.file.list(SETTINGS.dir_2_raw_md  .. "/**/*.md")
+if init_res.type == "message" then
+  print(init_res.data)
+  return
+end
+
+-- Assuming type = "config"
+local config = init_res.data
+
+local settings = p_utils.build_settings(config)
+
+local files = aip.file.list(settings.dir_2_raw_md  .. "/**/*.md")
 for  i, file in ipairs(files) do
     file._display = file.path
 end
@@ -28,12 +35,12 @@ end
 
 return aip.flow.before_all_response({
     inputs     = files,
---  options    = { 
---      input_concurrency = 12, 
---      model = "flash"
---  },
+    options    = { 
+        input_concurrency = config.concurrency, -- if nil, will be the default from aipack
+        model = config.model, -- if nil, will be the default from aipack
+    },
     before_all = {
-        settings = SETTINGS
+        settings = settings
     }
 })
 

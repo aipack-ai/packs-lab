@@ -37,7 +37,8 @@ function init_config(input)
   end  
 
   -- == Otherise, we can return the config
-  -- TODO: Would need 
+  -- Add config_path
+  config.config_path = config_path
   return {
     type = "config",
     data = config

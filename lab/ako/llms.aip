@@ -9,12 +9,22 @@ model = "gemini-2.5-flash"
 ```lua
 local p_utils = require("prompt_utils")
 
-local settings = p_utils.load_settings(input)
+-- input is nil or the config_path
+local init_res = p_utils.init_config(input)
 
-local glob = settings.dir_2_raw_md .. "/**/*.md"
-local files = aip.file.list_load(glob)
+if init_res.type == "message" then
+  print(init_res.data)
+  return
+end
 
--- print("... " .. glob .. "\n" .. aip.lua.dump(settings))
+-- Assuming type = "config"
+local config = init_res.data
+
+local settings = p_utils.build_settings(config)
+
+local files = aip.file.list(settings.dir_2_raw_md .. "/**/*.md")
+
+print("Creating llms.txt for " .. #files .. " files")
 
 return {
     files          = files,
@@ -66,6 +76,9 @@ end
 -- remove the eventual block content
 local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
-aip.file.save(data.dir_3_final_md .. "/llms.txt", content)
+local llms_path = data.dir_3_final_md .. "/llms.txt"
+aip.file.save(llms_path, content)
+
+return "➜ " .. llms_path
 
 ```

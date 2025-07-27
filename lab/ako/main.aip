@@ -3,8 +3,12 @@
 ```lua
 local p_utils = require("prompt_utils")
 
--- TODO: needs to extract the eventual input
-local init_res = p_utils.init_config()
+print("starting ... ")
+-- Get the first input (optional name of the config file) or nil
+local input = inputs and inputs[1] or nil
+
+-- The input is the eventual config path
+local init_res = p_utils.init_config(input)
 
 if init_res.type == "message" then
   print(init_res.data)
@@ -15,32 +19,37 @@ end
 
 if init_res.type == "config" then
   local config = init_res.data
-  local input = {config = config, _display = config.base_url}
-  aip.agent.run("slim", {inputs = { input } })
-  return {
-    init_res = init_res
-  }
+  -- The design is that each sub agent are independent and rebuild the config 
+  -- from the eventual config path
+  aip.agent.run("slim", {inputs = { config.config_path } })
+  
+  aip.agent.run("augment", {inputs = { config.config_path } })
+
+  aip.agent.run("llms", {inputs = { config.config_path } })
+
+else 
+  print("init response unknown", init_res)
 end
 
--- aip.agent.run("slim", {inputs = inputs})
--- 
--- aip.agent.run("augment", {inputs = inputs})
--- 
--- aip.agent.run("llms", {inputs = inputs})
--- 
 
+-- return aip.flow.before_all_response({
+--   before_all = { "one", "two" }
+-- })
 
 ```
 
-# Data Disabled for now
+
+# After All
 
 ```lua
-local init_res = before_all.init_res
-print("hello")
-if init_res.type == "message" then
-  print(init_res.data)
-  return {
-    init_res = init_res
-  }
-end
+-- print("slim agent\n50 files slimmed")
+-- 
+-- print("agument agent\n[ ] [ ] [ ]")
+-- 
+-- print("before_all",before_all)
+
+print("All Done")
+
+return "Done"
+
 ```
