@@ -1,0 +1,46 @@
+# Before All
+
+```lua
+local p_utils = require("prompt_utils")
+
+-- TODO: needs to extract the eventual input
+local init_res = p_utils.init_config()
+
+if init_res.type == "message" then
+  print(init_res.data)
+  return {
+    init_res = init_res
+  }
+end
+
+if init_res.type == "config" then
+  local config = init_res.data
+  local input = {config = config, _display = config.base_url}
+  aip.agent.run("slim", {inputs = { input } })
+  return {
+    init_res = init_res
+  }
+end
+
+-- aip.agent.run("slim", {inputs = inputs})
+-- 
+-- aip.agent.run("augment", {inputs = inputs})
+-- 
+-- aip.agent.run("llms", {inputs = inputs})
+-- 
+
+
+```
+
+# Data Disabled for now
+
+```lua
+local init_res = before_all.init_res
+print("hello")
+if init_res.type == "message" then
+  print(init_res.data)
+  return {
+    init_res = init_res
+  }
+end
+```

@@ -1,7 +1,7 @@
 # Options
 
 ```toml
-model = "gemini-2.5-flash-preview-04-17"
+model = "gemini-2.5-flash"
 ```
 
 # Data
@@ -14,7 +14,7 @@ local settings = p_utils.load_settings(input)
 local glob = settings.dir_2_raw_md .. "/**/*.md"
 local files = aip.file.list_load(glob)
 
--- print("... " .. settings .. "\n" .. aip.lua.dump(settings))
+-- print("... " .. glob .. "\n" .. aip.lua.dump(settings))
 
 return {
     files          = files,

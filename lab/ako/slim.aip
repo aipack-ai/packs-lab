@@ -3,7 +3,19 @@
 ```lua
 local p_utils = require("prompt_utils")
 
-local SETTINGS = p_utils.load_settings(input)
+local config = input and input.config or nil
+
+if config == nil then
+  local init_res = p_utils.init_config()
+  if init_res.type == "message" then
+    print(init_res.data)
+    return
+  end
+  -- Assume it id .type = "config"
+  config = init_res.data
+end
+
+local SETTINGS = p_utils.build_settings(config)
 
 local CONFIG = SETTINGS.config
 
@@ -15,6 +27,7 @@ local MAX_PAGES      = CONFIG.max_pages
 local global_page_counter = 0
 
 function process_url(url_str)
+  print("process_url " .. url_str)
   local url_obj   = aip.web.parse_url(url_str)
 
   local url       = url_obj.url
@@ -52,6 +65,7 @@ function process_url(url_str)
 end
 
 function process_links(links, page_urls_map) 
+  print("process_links ", #links)
   local links_queue = {}
   for i, link in ipairs(links) do
       local href      = aip.web.resolve_href(link.attrs.href, BASE_URL)
@@ -61,6 +75,7 @@ function process_links(links, page_urls_map)
       local url       = url_obj.url
 
       if global_page_counter >= MAX_PAGES then
+        print(global_page_counter .. " " .. MAX_PAGES)
         return links_queue
       end
 

@@ -3,9 +3,9 @@
 ```toml
 # This will override the config properties set in `.aipack/config.toml` and `~/.aipack-base/config.toml`
 
-model = "gemini-2.5-flash"
+model = "mini"
 
-input_concurrency = 12
+input_concurrency = 25
 
 # temperature = 0.0 
 ```
@@ -20,6 +20,9 @@ local input = inputs and inputs[1] or nil
 local SETTINGS = p_utils.load_settings(input)
 
 local files = aip.file.list(SETTINGS.dir_2_raw_md  .. "/**/*.md")
+for  i, file in ipairs(files) do
+    file._display = file.path
+end
 
 -- files = { files[1] }
 

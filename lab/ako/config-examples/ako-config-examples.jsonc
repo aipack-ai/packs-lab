@@ -1,0 +1,33 @@
+// Uncomment one of the sections below, or create your own.
+// Then, rename this file to ako-config.jsonc
+//
+// Note:
+// - Make sure you have only one section uncommented
+// - You can create or customize your own section
+// - Recommendation: Start with a relatively low max_pages number, like 10, and then
+//   increase it when you have achieved the desired result on the small subset.
+
+// -- Alchemy (blockchain)
+// {
+//        "base_url": "https://www.alchemy.com/",
+//      "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
+//     "filter_path": "/docs",
+//       "max_pages": 10,
+//   "exclude_globs": ["**/debug*"]
+// }
+
+// -- OpenAI Cookbook
+// {
+//        "base_url": "https://cookbook.openai.com/",
+//      "first_page": "https://cookbook.openai.com/examples/gpt4-1_prompting_guide",
+//     "filter_path": "/",
+//       "max_pages":  10
+// }
+
+// -- Tauri Web Site 
+// {
+//        "base_url": "https://tauri.app/",
+//      "first_page": "https://tauri.app/reference/acl/capability/",
+//     "filter_path": "/reference/",
+//       "max_pages":  10
+// }
