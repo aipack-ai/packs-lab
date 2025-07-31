@@ -37,10 +37,11 @@ return aip.flow.before_all_response({
     inputs     = files,
     options    = { 
         input_concurrency = config.concurrency, -- if nil, will be the default from aipack
-        model = config.model, -- if nil, will be the default from aipack
+        model = config.augment_model, -- if nil, will be the default from aipack
     },
     before_all = {
-        settings = settings
+        settings     = settings, 
+        total_files  = #files
     }
 })
 
@@ -105,4 +106,16 @@ aip.file.save(data.dest_path, content)
 -- aip.file.append("answers.md", response .. "\n\n----\n\n")
 
 return "DONE .. " .. data.dest_path
+```
+
+# After All 
+
+```lua
+
+-- the .after_all of the agent
+return {
+    -- to know the number of skipped v.s. processed (since .outputs will be also available)
+    total_files = before_all.total_files
+}
+
 ```

@@ -1,9 +1,3 @@
-# Options
-
-```toml
-model = "gemini-2.5-flash"
-```
-
 # Data
 
 ```lua
@@ -24,12 +18,20 @@ local settings = p_utils.build_settings(config)
 
 local files = aip.file.list(settings.dir_2_raw_md .. "/**/*.md")
 
+local msg =    "Processing llms.txt for ➜ " .. #files .. " files"
+aip.run.pin("status", {label = "Starting:", content = msg})
+
 print("Creating llms.txt for " .. #files .. " files")
 
-return {
+return aip.flow.data_response({
+  options = {
+    model = config.llms_model
+  },
+  data = {
     files          = files,
     dir_3_final_md = settings.dir_3_final_md
-}
+  }
+})
 
 ```
 
@@ -78,6 +80,9 @@ local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
 local llms_path = data.dir_3_final_md .. "/llms.txt"
 aip.file.save(llms_path, content)
+
+local msg =    "✅ " .. llms_path .. " processed."
+aip.run.pin("status", {label = "DONE:", content = msg})
 
 return "➜ " .. llms_path
 

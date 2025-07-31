@@ -3,7 +3,6 @@
 ```lua
 local p_utils = require("prompt_utils")
 
-print("starting ... ")
 -- Get the first input (optional name of the config file) or nil
 local input = inputs and inputs[1] or nil
 
@@ -11,7 +10,7 @@ local input = inputs and inputs[1] or nil
 local init_res = p_utils.init_config(input)
 
 if init_res.type == "message" then
-  print(init_res.data)
+  aip.run.pin("msg", 0, { label = "Action Needed:", content = init_res.data} )
   return {
     init_res = init_res
   }
@@ -19,13 +18,35 @@ end
 
 if init_res.type == "config" then
   local config = init_res.data
-  -- The design is that each sub agent are independent and rebuild the config 
-  -- from the eventual config path
-  aip.agent.run("slim", {inputs = { config.config_path } })
+
+  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "⏸ Queued"})
+  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "⏸ Queued"})
+  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "⏸ Queued"})
+
+  -- == Run Augment
+  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "▶ Running"})
+
+  local slim_data = aip.agent.run("slim", {inputs = { config.config_path } }).after_all
+
+  local slim_msg = "" .. slim_data.num_of_files .. " pages processed."
+  slim_msg = slim_msg .. " " .. aip.text.format_size(slim_data.orig_html_total_size) 
+  slim_msg = slim_msg .. " ➜ " .. aip.text.format_size(slim_data.raw_md_total_size)
+  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "✅ DONE - " .. slim_msg})
   
-  aip.agent.run("augment", {inputs = { config.config_path } })
+  -- == Run Augment
+  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "▶ Running"})
+
+  local augment_data = aip.agent.run("augment", {inputs = { config.config_path } })
+
+  -- print(augment_data)
+  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "✅ DONE" })
+
+  -- == Run llms
+  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "▶ Running"})
 
   aip.agent.run("llms", {inputs = { config.config_path } })
+  
+  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "✅ DONE"})
 
 else 
   print("init response unknown", init_res)
@@ -47,8 +68,6 @@ end
 -- print("agument agent\n[ ] [ ] [ ]")
 -- 
 -- print("before_all",before_all)
-
-print("All Done")
 
 return "Done"
 

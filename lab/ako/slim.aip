@@ -1,4 +1,4 @@
-# Data
+# Before All
 
 ```lua
 local p_utils = require("prompt_utils")
@@ -23,11 +23,15 @@ local FIRST_PAGE     = CONFIG.first_page
 local FILTER_PATH    = CONFIG.filter_path
 local MAX_PAGES      = CONFIG.max_pages
 
-local global_page_counter = 0
+local global_page_counter      = 0
+local global_total_orig_size   = 0
+local global_total_slim_size   = 0
+local global_total_md_raw_size = 0
 
 function process_url(url_str)
-  print("process_url " .. url_str)
   local url_obj   = aip.web.parse_url(url_str)
+
+  aip.run.pin("process", 1, {label = "Processing:", content = url_str})
 
   local url       = url_obj.url
   local host      = url_obj.host
@@ -43,16 +47,25 @@ function process_url(url_str)
 
   local original_html_path = SETTINGS.dir_0_original .. "/" .. base_path .. ".html"
   local original_html_file = aip.file.save(original_html_path, html_content)
+  global_total_orig_size = global_total_orig_size + original_html_file.size
 
   local links = aip.html.select(html_content, "a[href]")
 
   local slim_html_path =  SETTINGS.dir_1_slim_html .. "/" .. base_path .. ".html"
   local html_slim_file = aip.file.save_html_to_slim(original_html_path, slim_html_path)
+  global_total_slim_size = global_total_slim_size + html_slim_file.size
 
   local raw_md_path = SETTINGS.dir_2_raw_md .. "/" .. base_path .. ".md"
   local raw_md_file = aip.file.save_html_to_md(slim_html_path, raw_md_path)
+  global_total_md_raw_size = global_total_md_raw_size + raw_md_file.size
 
   global_page_counter = global_page_counter + 1
+
+  local progress_msg =              "Original HTMLs Size: " .. aip.text.format_size(global_total_orig_size)
+  progress_msg  = progress_msg .. "\n  Slimed HTMLs Size: " .. aip.text.format_size(global_total_slim_size)
+  progress_msg  = progress_msg .. "\n Raw Markdowns Size: " .. aip.text.format_size(global_total_md_raw_size)
+  progress_msg  = progress_msg .. "\n    Number of pages: " .. string.format("%d", global_page_counter) 
+  aip.run.pin("progress", 0, {label = "  Progress:", content = progress_msg})
 
   return {
     original_html_file = original_html_file,
@@ -103,4 +116,26 @@ local links_queue = process_links(links, page_urls_map)
 for i, links in ipairs(links_queue) do
   process_links(links, page_urls_map)
 end
+
+local final_msg = "✅ Slim completed. " .. global_page_counter .. " files processed."
+final_msg = final_msg .. "\n   " .. aip.text.format_size(global_total_orig_size) .. " ➜ " .. aip.text.format_size(global_total_md_raw_size)
+aip.run.pin("process", 1, {label = "      DONE:", content = final_msg})
+
+-- Here we make sure the inputs is nil, since it was not for the tasks but for the before_all
+return aip.flow.before_all_response({
+  inputs     = {},
+  before_all = {
+    num_of_files          = global_page_counter,
+    orig_html_total_size  = global_total_orig_size,
+    raw_md_total_size     = global_total_md_raw_size,
+  }
+})
+```
+
+# After All
+
+```lua
+
+return before_all
+
 ```
