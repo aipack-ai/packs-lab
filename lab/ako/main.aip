@@ -35,8 +35,8 @@ if init_res.type == "config" then
   local slim_data = aip.agent.run("slim", {inputs = { config.config_path } }).after_all
 
   local slim_msg = "" .. slim_data.num_of_files .. " pages processed."
-  slim_msg = slim_msg .. " " .. aip.text.format_size(slim_data.orig_html_total_size) 
-  slim_msg = slim_msg .. " ➜ " .. aip.text.format_size(slim_data.raw_md_total_size)
+  slim_msg = slim_msg .. " " .. aip.text.trim(aip.text.format_size(slim_data.orig_html_total_size))
+  slim_msg = slim_msg .. " ➜ " .. aip.text.trim(aip.text.format_size(slim_data.raw_md_total_size))
   aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "✅ DONE - " .. slim_msg})
   
   -- == Run Augment
@@ -50,7 +50,7 @@ if init_res.type == "config" then
   aip.run.pin("augm", 1, { label = "Augment Agent:", content = agument_msg })
 
   -- == Run llms
-  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "▶ Running"})
+  aip.run.pin("llms", 2, { label = "   LLMs Agent:", content = "▶ Running"})
 
   local llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
   local llms_msg = "✅ DONE - llms.txt path: " .. llms_data.llms_path

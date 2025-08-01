@@ -23,6 +23,9 @@ local FIRST_PAGE     = CONFIG.first_page
 local FILTER_PATH    = CONFIG.filter_path
 local MAX_PAGES      = CONFIG.max_pages
 
+local HAS_EXCLUDE_GLOBS  = config.exclude_globs and next(config.exclude_globs) ~= nil 
+local EXCLUDE_GLOBS      = config.exclude_globs
+
 local global_page_counter      = 0
 local global_total_orig_size   = 0
 local global_total_slim_size   = 0
@@ -30,7 +33,6 @@ local global_total_md_raw_size = 0
 
 function process_url(url_str)
   local url_obj   = aip.web.parse_url(url_str)
-
   aip.run.pin("process", 1, {label = "Processing:", content = url_str})
 
   local url       = url_obj.url
@@ -72,9 +74,9 @@ function process_url(url_str)
   aip.run.pin("num_pages", 0, {label = "     Pages:", content = pages_msg})
 
   local progress_msg = ""
-  progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size)
-  progress_msg  = progress_msg .. "\n  Slimed HTMLs: " .. aip.text.format_size(global_total_slim_size)
-  progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size)
+  progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size, "MB")
+  progress_msg  = progress_msg .. "\n  Slimed HTMLs: " .. aip.text.format_size(global_total_slim_size, "MB")
+  progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size, "MB")
   aip.run.pin("progress", 0, {label = "     Sizes:", content = progress_msg})
 
   return {
@@ -101,12 +103,22 @@ function process_links(links, page_urls_map)
 
       -- if href starts with FILTER_PATH
       if url:sub(1, #BASE_URL) == BASE_URL and url_path:sub(1, #FILTER_PATH) == FILTER_PATH then
-        if not page_urls_map[page_url] then
+        local pass = true
+        if HAS_EXCLUDE_GLOBS then
+          if aip.path.matches_glob(url_path, EXCLUDE_GLOBS) then 
+            print("Exclude glob path (from exclude_globs) " .. url_path)
+            pass = false
+          end
+        end
+        -- make sure we do not process twice
+        if pass and not page_urls_map[page_url] then
           local links = process_url(page_url).links
           table.insert(links_queue, links)
           page_urls_map[page_url] = true
         end
       end
+
+      ::continue::
   end
   return links_queue
 end
@@ -128,7 +140,9 @@ for i, links in ipairs(links_queue) do
 end
 
 local final_msg = "✅ Slim completed. " .. global_page_counter .. " files processed."
-final_msg = final_msg .. "\n   " .. aip.text.format_size(global_total_orig_size) .. " ➜ " .. aip.text.format_size(global_total_md_raw_size)
+local sizes_msg = aip.text.format_size(global_total_orig_size) .. " ➜ " .. aip.text.format_size(global_total_md_raw_size)
+sizes_msg = aip.text.trim(sizes_msg)
+final_msg = final_msg .. "\n   " .. sizes_msg
 aip.run.pin("process", 1, {label = "      DONE:", content = final_msg})
 
 -- Here we make sure the inputs is nil, since it was not for the tasks but for the before_all
