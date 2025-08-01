@@ -29,7 +29,7 @@ if init_res.type == "config" then
   aip.run.pin("augm", 1, { label = "Augment Agent:", content = "⏸ Queued"})
   aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "⏸ Queued"})
 
-  -- == Run Augment
+  -- == Run Slim
   aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "▶ Running"})
 
   local slim_data = aip.agent.run("slim", {inputs = { config.config_path } }).after_all
@@ -52,7 +52,7 @@ if init_res.type == "config" then
   -- == Run llms
   aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "▶ Running"})
 
-  local  llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
+  local llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
   local llms_msg = "✅ DONE - llms.txt path: " .. llms_data.llms_path
   
   aip.run.pin("llms", 2, { label = "   LLms Agent:", content = llms_msg})

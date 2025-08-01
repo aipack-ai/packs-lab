@@ -69,13 +69,13 @@ function process_url(url_str)
   end
   pages_msg = pages_msg .. global_page_counter .. "/" .. MAX_PAGES
 
-  aip.run.pin("num_pages", 0, {label = "    Pages:", content = pages_msg})
+  aip.run.pin("num_pages", 0, {label = "     Pages:", content = pages_msg})
 
   local progress_msg = ""
   progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size)
   progress_msg  = progress_msg .. "\n  Slimed HTMLs: " .. aip.text.format_size(global_total_slim_size)
   progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size)
-  aip.run.pin("progress", 0, {label = "    Sizes:", content = progress_msg})
+  aip.run.pin("progress", 0, {label = "     Sizes:", content = progress_msg})
 
   return {
     original_html_file = original_html_file,
