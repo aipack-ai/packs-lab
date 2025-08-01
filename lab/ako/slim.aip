@@ -61,11 +61,21 @@ function process_url(url_str)
 
   global_page_counter = global_page_counter + 1
 
-  local progress_msg =              "Original HTMLs Size: " .. aip.text.format_size(global_total_orig_size)
-  progress_msg  = progress_msg .. "\n  Slimed HTMLs Size: " .. aip.text.format_size(global_total_slim_size)
-  progress_msg  = progress_msg .. "\n Raw Markdowns Size: " .. aip.text.format_size(global_total_md_raw_size)
-  progress_msg  = progress_msg .. "\n    Number of pages: " .. string.format("%d", global_page_counter) 
-  aip.run.pin("progress", 0, {label = "  Progress:", content = progress_msg})
+  local pages_msg = nil
+  if global_page_counter >= MAX_PAGES then
+    pages_msg = "✔ "
+  else 
+    pages_msg = "▶ "
+  end
+  pages_msg = pages_msg .. global_page_counter .. "/" .. MAX_PAGES
+
+  aip.run.pin("num_pages", 0, {label = "    Pages:", content = pages_msg})
+
+  local progress_msg = ""
+  progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size)
+  progress_msg  = progress_msg .. "\n  Slimed HTMLs: " .. aip.text.format_size(global_total_slim_size)
+  progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size)
+  aip.run.pin("progress", 0, {label = "    Sizes:", content = progress_msg})
 
   return {
     original_html_file = original_html_file,

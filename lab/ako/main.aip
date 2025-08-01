@@ -3,6 +3,12 @@
 ```lua
 local p_utils = require("prompt_utils")
 
+-- If return a string, means not valid, and it's the message
+local valid = p_utils.validate_aip_version()
+if type(valid) == "string" then
+  return aip.flow.skip(valid)
+end
+
 -- Get the first input (optional name of the config file) or nil
 local input = inputs and inputs[1] or nil
 
@@ -36,17 +42,20 @@ if init_res.type == "config" then
   -- == Run Augment
   aip.run.pin("augm", 1, { label = "Augment Agent:", content = "▶ Running"})
 
-  local augment_data = aip.agent.run("augment", {inputs = { config.config_path } })
-
-  -- print(augment_data)
-  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "✅ DONE" })
+  local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
+  local agument_msg = "✅ DONE - " .. augment_data.processed_count .. " AI Augmented"
+  if augment_data.skipped_count > 0 then
+      agument_msg = agument_msg .. " - " .. augment_data.skipped_count .. " already processed."
+  end
+  aip.run.pin("augm", 1, { label = "Augment Agent:", content = agument_msg })
 
   -- == Run llms
   aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "▶ Running"})
 
-  aip.agent.run("llms", {inputs = { config.config_path } })
+  local  llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
+  local llms_msg = "✅ DONE - llms.txt path: " .. llms_data.llms_path
   
-  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "✅ DONE"})
+  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = llms_msg})
 
 else 
   print("init response unknown", init_res)

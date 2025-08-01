@@ -10,6 +10,12 @@ temperature = 0.0
 ```lua
 local p_utils = require("prompt_utils")
 
+-- If return a string, means not valid, and it's the message
+local valid = p_utils.validate_aip_version()
+if type(valid) == "string" then
+  return aip.flow.skip(valid)
+end
+
 -- Get the first input (optional name of the config file) or nil
 local input = inputs and inputs[1] or nil
 
@@ -65,6 +71,8 @@ end
 
 raw_md_file = aip.file.load(raw_md_file.path)
 
+aip.run.pin("progress", 0, {label = "Progress:", content = "➜ " .. raw_md_file.path})
+
 return {
     raw_md_file = raw_md_file,
     dest_path   = dest_path
@@ -103,6 +111,8 @@ content = aip.md.outer_block_content_or_raw(content)
 
 aip.file.save(data.dest_path, content)
 
+aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
+
 -- aip.file.append("answers.md", response .. "\n\n----\n\n")
 
 return "DONE .. " .. data.dest_path
@@ -111,11 +121,29 @@ return "DONE .. " .. data.dest_path
 # After All 
 
 ```lua
+local input_len = #inputs
+local processed_count = 0
+for i, o in ipairs(outputs) do
+  -- Doing type check for AIPACK 0.7.17 since it is LigthUserData if skipped
+  -- Future version will be "false"
+  if type(o) == "string" then
+    processed_count = processed_count + 1
+  end
+end
+
+local msg = "✅ DONE - " .. processed_count .. " AI Augmented"
+local skipped_count = input_len - processed_count
+if skipped_count > 0 then
+    msg = msg .. " - " .. skipped_count .. " already processed."
+end
+aip.run.pin("progress", 0, {label = "Progress:", content = msg})
 
 -- the .after_all of the agent
 return {
     -- to know the number of skipped v.s. processed (since .outputs will be also available)
-    total_files = before_all.total_files
+    total_files     = before_all.total_files,
+    processed_count = processed_count,
+    skipped_count   = skipped_count
 }
 
 ```

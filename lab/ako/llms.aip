@@ -3,6 +3,13 @@
 ```lua
 local p_utils = require("prompt_utils")
 
+-- If return a string, means not valid, and it's the message
+local valid = p_utils.validate_aip_version()
+if type(valid) == "string" then
+  return aip.flow.skip(valid)
+end
+
+
 -- input is nil or the config_path
 local init_res = p_utils.init_config(input)
 
@@ -84,6 +91,20 @@ aip.file.save(llms_path, content)
 local msg =    "✅ " .. llms_path .. " processed."
 aip.run.pin("status", {label = "DONE:", content = msg})
 
-return "➜ " .. llms_path
+return {
+  _display  = "➜ " .. llms_path,
+  llms_path = llms_path
+}
 
 ```
+
+# After All
+
+```lua
+
+return {
+  llms_path = outputs[1].llms_path
+}
+
+```
+
