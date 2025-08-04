@@ -1,4 +1,3 @@
-local BASE_OUT_DIR = "_ako-out"
 local CONFIG_PATH  = "./ako-config.jsonc"
 
 -- Init or check that the config is present
@@ -52,7 +51,7 @@ function build_settings(config)
 
   local url_obj   = aip.web.parse_url(config.base_url)
 
-  local base_data_dir = BASE_OUT_DIR .. "/" .. url_obj.host
+  local base_data_dir = config.out_dir .. "/" .. url_obj.host
 
   return {
     config         = config,

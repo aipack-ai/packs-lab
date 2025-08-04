@@ -9,6 +9,7 @@
 
 // -- Alchemy (blockchain)
 // {
+//         "out_dir": "_ako-out",
 //        "base_url": "https://www.alchemy.com/",
 //      "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //     "filter_path": "/docs",
@@ -21,6 +22,7 @@
 
 // -- OpenAI Cookbook
 // {
+//         "out_dir": "_ako-out",
 //        "base_url": "https://cookbook.openai.com/",
 //      "first_page": "https://cookbook.openai.com/examples/gpt4-1_prompting_guide",
 //     "filter_path": "/",
@@ -32,6 +34,7 @@
 
 // -- Tauri Web Site 
 // {
+//         "out_dir": "_ako-out",
 //        "base_url": "https://tauri.app/",
 //      "first_page": "https://tauri.app/reference/acl/capability/",
 //     "filter_path": "/reference/",
