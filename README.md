@@ -1,20 +1,61 @@
-# AIPACK Lab - Project Examples
+# AIPACK Lab
 
-Here is a list of AIPACK lab packs that can be ran from this repo. 
+Here is a list of AIPACK lab packs that can be run from this repo.
 
-First, git clone this repo 
-- `https://github.com/aipack-ai/aipack-lab.git`
-Then, get into it
-- Simplest option: Open this dir with IDE and integrated terminal
-- In the integrated terminal
-    - Make sure to have the API keys of the model provider you want to use. 
-- do a `aip init .` to initial the root directory as the aiapack workspace `.aipack/` folder should be created. 
+You have two ways to learn these lab packs/examples.
 
-And then, a good first pack to start with is `ako` (Agentic Knowledge Optimizer)
+Both require:
+- AIPACK installed (see https://aipack.ai)
+- API keys set in the terminal
+
+## 1) Install and run the pack
+
+The simplest way to run lab AI Packs is to install and run them.
+
+For example
 
 ```sh
-aip run lab/ako --xp-tui
+# good practice
+mkdir my-aip-test
+cd my-aip-test
+
+# Install the lab@ako (agentic knowledge optimization)
+aip install lab@ako
+
+# Make sure to have your LLM provider API keys in the terminal
+
+# Recommendation: Use an editor with an integrated terminal
+#                 to have terminal + file explorer/viewer in one interface.
+
+# Run the pack (make sure to have your API keys)
+aip run lab@ako --xp-tui
+
+# --xp-tui is the new Terminal UI (will be default from 0.8.0)
 ```
 
-_`--xp-tui` is for the new Terminal UI (experimental in 0.7.x, will become default in 0.8.x)_
+> NOTE: In the case of `lab@ako`, it will ask you to edit the generated `ako-config.jsonc` and then just press `r` to run it with your settings.
 
+## 2) Via the lab repo
+
+The second way is to run them via the lab repo directly.
+
+This is a good way when you want to play with the agent code and learn how it works.
+
+```sh
+git clone https://github.com/aipack-ai/aipack-lab.git
+cd aipack-lab
+
+# Make sure to have your LLM provider API keys in the terminal
+
+# Recommendation: Use an editor with an integrated terminal
+#                 to have terminal + file explorer/viewer in one interface.
+
+# Run the agent from folder
+aip run lab/ako --xp-tui
+
+# --xp-tui is the new Terminal UI (will be default from 0.8.0)
+```
+
+<br />
+
+[This Repo](https://github.com/aipack-ai/aipack-lab)

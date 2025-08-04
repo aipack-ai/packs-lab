@@ -22,10 +22,6 @@ target/
 # By default ignore all .aipack (but not the .aip)
 *.aipack
 
-# This aipack-lab special treatment (exclude root .aipack/ but allow sub projects)
-!.aipack/
-/.aipack
-
 # Uncomment below to allow commiting .aipack/pack/custom .aip
 # Only allow .aipack/pack/custom and .aipack/Config.toml
 # Note: Here the starting `/` will just include the top .aip

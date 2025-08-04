@@ -134,6 +134,17 @@ local skipped_count = input_len - processed_count
 if skipped_count > 0 then
     msg = msg .. " - " .. skipped_count .. " already processed."
 end
+
+local raw_md_stats   = aip.file.stats(before_all.settings.dir_2_raw_md   .. "/**/*.md")
+local final_md_stats = aip.file.stats(before_all.settings.dir_3_final_md .. "/**/*.md")
+
+local raw_size_fmt   = aip.text.format_size(raw_md_stats.total_size)
+local final_size_fmt = aip.text.format_size(final_md_stats.total_size)
+
+msg = msg .. "\n"
+msg = msg .. "\n  Raw md files: " .. raw_size_fmt
+msg = msg .. "\nFinal md files: " .. final_size_fmt
+
 aip.run.pin("progress", 0, {label = "Progress:", content = msg})
 
 -- the .after_all of the agent
@@ -141,7 +152,9 @@ return {
     -- to know the number of skipped v.s. processed (since .outputs will be also available)
     total_files     = before_all.total_files,
     processed_count = processed_count,
-    skipped_count   = skipped_count
+    skipped_count   = skipped_count,
+    raw_size_fmt    = raw_size_fmt,
+    final_size_fmt  = final_size_fmt,
 }
 
 ```

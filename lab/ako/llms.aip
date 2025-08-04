@@ -86,14 +86,15 @@ end
 local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
 local llms_path = data.dir_3_final_md .. "/llms.txt"
-aip.file.save(llms_path, content)
-
-local msg =    "✅ " .. llms_path .. " processed."
+local llms_file = aip.file.save(llms_path, content)
+local llms_size_fmt = aip.text.trim(aip.text.format_size(llms_file.size))
+local msg =    "✅ " .. llms_path .. " processed (" .. llms_size_fmt .. ")."
 aip.run.pin("status", {label = "DONE:", content = msg})
 
 return {
-  _display  = "➜ " .. llms_path,
-  llms_path = llms_path
+  _display      = "➜ " .. llms_path,
+  llms_path     = llms_path,
+  llms_size     = llms_file.size
 }
 
 ```
@@ -103,7 +104,8 @@ return {
 ```lua
 
 return {
-  llms_path = outputs[1].llms_path
+  llms_path = outputs[1].llms_path,
+  llms_size = outputs[1].llms_size
 }
 
 ```

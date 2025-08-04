@@ -25,15 +25,17 @@ end
 if init_res.type == "config" then
   local config = init_res.data
 
+  local settings = p_utils.build_settings(config)
+
   aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "⏸ Queued"})
   aip.run.pin("augm", 1, { label = "Augment Agent:", content = "⏸ Queued"})
-  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = "⏸ Queued"})
+  aip.run.pin("llms", 2, { label = "   llms Agent:", content = "⏸ Queued"})
 
   -- == Run Slim
   aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "▶ Running"})
 
   local slim_data = aip.agent.run("slim", {inputs = { config.config_path } }).after_all
-
+  
   local slim_msg = "" .. slim_data.num_of_files .. " pages processed."
   slim_msg = slim_msg .. " " .. aip.text.trim(aip.text.format_size(slim_data.orig_html_total_size))
   slim_msg = slim_msg .. " ➜ " .. aip.text.trim(aip.text.format_size(slim_data.raw_md_total_size))
@@ -47,16 +49,33 @@ if init_res.type == "config" then
   if augment_data.skipped_count > 0 then
       agument_msg = agument_msg .. " - " .. augment_data.skipped_count .. " already processed."
   end
+  agument_msg = agument_msg .. " " .. aip.text.trim(augment_data.raw_size_fmt) .. " ➜ " .. aip.text.trim(augment_data.final_size_fmt)
+
   aip.run.pin("augm", 1, { label = "Augment Agent:", content = agument_msg })
 
   -- == Run llms
-  aip.run.pin("llms", 2, { label = "   LLMs Agent:", content = "▶ Running"})
+  aip.run.pin("llms", 2, { label = "   llms Agent:", content = "▶ Running"})
 
   local llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
-  local llms_msg = "✅ DONE - llms.txt path: " .. llms_data.llms_path
+  local llms_size_fmt = aip.text.trim(aip.text.format_size(llms_data.llms_size))
+  local llms_msg = "✅ DONE ➜ " .. llms_data.llms_path .. " (" .. llms_size_fmt .. ")"
   
-  aip.run.pin("llms", 2, { label = "   LLms Agent:", content = llms_msg})
+  aip.run.pin("llms", 2,  { label = "   llms Agent:", content = llms_msg})
 
+  -- == Pin final
+  local original_size_fmt = aip.text.format_size(slim_data.orig_html_total_size)
+  local final_size = aip.file.stats(settings.dir_3_final_md .. "/**/*.*").total_size
+  local final_size_fmt = aip.text.format_size(final_size, "MB")
+  if final_size < 1000000 then
+    local full_size_fmt = aip.text.trim(aip.text.format_size(final_size))
+    final_size_fmt = final_size_fmt .. " (" .. full_size_fmt .. ")"
+  end
+
+  local final_msg = "✅ ALL DONE"
+  final_msg = final_msg .. "\n" .. "     From Original HTMLs size: " .. original_size_fmt
+  final_msg = final_msg .. "\n" .. "To AI Optimized Markdown size: " .. final_size_fmt .. " including llms.txt"
+
+  aip.run.pin("final", 2, { label = "      Summary:", content = final_msg})
 else 
   print("init response unknown", init_res)
 end

@@ -103,15 +103,20 @@ function process_links(links, page_urls_map)
 
       -- if href starts with FILTER_PATH
       if url:sub(1, #BASE_URL) == BASE_URL and url_path:sub(1, #FILTER_PATH) == FILTER_PATH then
-        local pass = true
-        if HAS_EXCLUDE_GLOBS then
+        -- if not already processed
+        local pass = not page_urls_map[page_url]
+        
+        -- if not in exclude (make sure to test pass so that we do not double print)
+        if pass and HAS_EXCLUDE_GLOBS then
           if aip.path.matches_glob(url_path, EXCLUDE_GLOBS) then 
             print("Exclude glob path (from exclude_globs) " .. url_path)
+            page_urls_map[page_url] = true
             pass = false
           end
         end
+
         -- make sure we do not process twice
-        if pass and not page_urls_map[page_url] then
+        if pass then
           local links = process_url(page_url).links
           table.insert(links_queue, links)
           page_urls_map[page_url] = true
@@ -124,6 +129,7 @@ function process_links(links, page_urls_map)
 end
 
 -- Map of all of the page_url already processed
+-- NOTE: this also contain the excluded from globs (so that we do not double print)
 local page_urls_map = {}
 
 -- Process initial page, links in the page
