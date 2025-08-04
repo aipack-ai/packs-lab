@@ -13,7 +13,7 @@
 //      "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //     "filter_path": "/docs",
 //       "max_pages": 10,
-//   "exclude_globs": ["**/debug*"], // not supported yet
+//   "exclude_globs": ["**/{debug,llms}*"],
 //   "augment_model": "gemini-2.5-flash",
 //      "llms_model": "gpt-4.1",
 //     "concurrency": 12

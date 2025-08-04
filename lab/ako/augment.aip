@@ -111,11 +111,9 @@ content = aip.md.outer_block_content_or_raw(content)
 
 aip.file.save(data.dest_path, content)
 
-aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
+-- aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
 
--- aip.file.append("answers.md", response .. "\n\n----\n\n")
-
-return "DONE .. " .. data.dest_path
+return "➜ " .. data.dest_path
 ```
 
 # After All 
