@@ -70,8 +70,8 @@ end
 -- true if it is valid
 -- string if not ok and user need to 
 function validate_aip_version() 
-  if not aip.semver.compare(CTX.AIPACK_VERSION, ">=", "0.7.17") then
-      local msg = "\nWARNING - lab/ako pack requires AIPACK_VERSION 0.7.17 or above, but " .. CTX.AIPACK_VERSION .. " is currently installed"
+  if not aip.semver.compare(CTX.AIPACK_VERSION, ">=", "0.7.18") then
+      local msg = "\nWARNING - lab/ako pack requires AIPACK_VERSION 0.7.19 or above, but " .. CTX.AIPACK_VERSION .. " is currently installed"
       msg = msg .. "\n\nACTION  - Update your aipack via `aip self update` (for Mac/Linux), or from https//aipack.ai)"
       return msg
   else

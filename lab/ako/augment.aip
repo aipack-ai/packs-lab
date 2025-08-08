@@ -2,7 +2,7 @@
 
 ```toml
 # Here can set default agent model, temperature, and input_concurrency
-temperature = 0.0 
+# temperature = 0.0 # not supported in many gpt models
 ```
 
 # Before All
