@@ -15,7 +15,7 @@
 //     "filter_path": "/docs",
 //       "max_pages": 10,
 //   "exclude_globs": ["**/{debug,llms}*"],
-//   "augment_model": "gpt-5-nano", # Models can be any providers "gemini-2.5-flash"
+//   "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
 //      "llms_model": "gpt-5-mini",
 //     "concurrency": 12
 // }
