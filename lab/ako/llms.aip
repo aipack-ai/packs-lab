@@ -74,6 +74,8 @@ Here are all of the files we need to build a llms.md for.
 
 {{/each}}
 
+Make sure that for each file you add the description of the file. 
+
 # Output
 
 ```lua
