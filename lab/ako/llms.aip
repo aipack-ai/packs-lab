@@ -25,10 +25,10 @@ local settings = p_utils.build_settings(config)
 
 local files = aip.file.list(settings.dir_2_raw_md .. "/**/*.md")
 
-local msg =    "Processing llms.txt for ➜ " .. #files .. " files"
+local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
 
-print("Creating llms.txt for " .. #files .. " files")
+print("Creating llms.md for " .. #files .. " files")
 
 return aip.flow.data_response({
   options = {
@@ -44,16 +44,16 @@ return aip.flow.data_response({
 
 # System
 
-You are an agent that create `llms.txt` in markdown from a list of files and their content. 
+You are an agent that create `llms.md` in markdown from a list of files and their content. 
 
-Here is the llms.txt format/guideline, and the user will give you all of the files.
+Here is the llms.md format/guideline, and the user will give you all of the files.
 
 ```
 At the moment the most widely and easily understood format for language models is Markdown. Simply showing where key Markdown files can be found is a great first step. Providing some basic structure helps a language model to find where the information it needs can come from.
 
-The llms.txt file is unusual in that it uses Markdown to structure the information rather than a classic structured format such as XML. The reason for this is that we expect many of these files to be read by language models and agents. Having said that, the information in llms.txt follows a specific format and can be read using standard programmatic-based tools.
+The llms.md file is unusual in that it uses Markdown to structure the information rather than a classic structured format such as XML. The reason for this is that we expect many of these files to be read by language models and agents. Having said that, the information in llms.md follows a specific format and can be read using standard programmatic-based tools.
 
-The llms.txt file spec is for files located in the root path /llms.txt of a website (or, optionally, in a subpath). A file following the spec contains the following sections as markdown, in the specific order:
+The llms.md file spec is for files located in the root path /llms.md of a website (or, optionally, in a subpath). A file following the spec contains the following sections as markdown, in the specific order:
 
 An H1 with the name of the project or site. This is the only required section
 A blockquote with a short summary of the project, containing key information necessary for understanding the rest of the file
@@ -64,7 +64,7 @@ Each “file list” is a markdown list, containing a required markdown hyperlin
 
 # Instruction
 
-Here are all of the files we need to build a llms.txt for. 
+Here are all of the files we need to build a llms.md for. 
 
 {{#each data.files}}
 {{this.path}}
@@ -85,7 +85,7 @@ end
 -- remove the eventual block content
 local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
-local llms_path = data.dir_3_final_md .. "/llms.txt"
+local llms_path = data.dir_3_final_md .. "/llms.md"
 local llms_file = aip.file.save(llms_path, content)
 local llms_size_fmt = aip.text.format_size(llms_file.size, {trim = true})
 local msg =    "✅ " .. llms_path .. " processed (" .. llms_size_fmt .. ")."

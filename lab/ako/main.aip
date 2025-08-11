@@ -73,7 +73,7 @@ if init_res.type == "config" then
 
   local final_msg = "✅ ALL DONE"
   final_msg = final_msg .. "\n" .. "     From Original HTMLs size: " .. original_size_fmt
-  final_msg = final_msg .. "\n" .. "To AI Optimized Markdown size: " .. final_size_fmt .. " including llms.txt"
+  final_msg = final_msg .. "\n" .. "To AI Optimized Markdown size: " .. final_size_fmt .. " including llms.md"
 
   aip.run.pin("final", 2, { label = "      Summary:", content = final_msg})
 else 
