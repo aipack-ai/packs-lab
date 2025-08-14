@@ -15,7 +15,7 @@
 //     "filter_path": "/docs",
 //       "max_pages": 10,
 //   "exclude_globs": ["**/{debug,llms}*"],
-//   "augment_model": "gpt-5-mini-minimal", // Models can be any providers "gemini-2.5-flash"
+//   "augment_model": "gpt-5-mini-low", // Models can be any providers "gemini-2.5-flash"
 //      "llms_model": "gpt-5-mini",
 //     "concurrency": 12
 // }
@@ -27,7 +27,7 @@
 //      "first_page": "https://cookbook.openai.com/examples/gpt4-1_prompting_guide",
 //     "filter_path": "/",
 //       "max_pages":  10,
-//   "augment_model": "gpt-5-mini-minimal",
+//   "augment_model": "gpt-5-mini-low",
 //      "llms_model": "gpt-5-mini",
 //     "concurrency": 12
 // }
@@ -39,7 +39,7 @@
 //      "first_page": "https://tauri.app/reference/acl/capability/",
 //     "filter_path": "/reference/",
 //       "max_pages":  10,
-//   "augment_model": "gpt-5-mini-minimal",
+//   "augment_model": "gpt-5-mini-low",
 //      "llms_model": "gpt-5-mini",
 //     "concurrency": 12
 // }
