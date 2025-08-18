@@ -88,10 +88,11 @@ function process_url(url_str)
 
 end
 
-function process_links(links, page_urls_map) 
+function process_links(links, page_urls_map, current_page_url) 
   local links_queue = {}
   for i, link in ipairs(links) do
-      local href      = aip.web.resolve_href(link.attrs.href, BASE_URL)
+      -- Resolve relative hrefs against the current page URL to preserve directory context
+      local href      = aip.web.resolve_href(link.attrs.href, current_page_url)
       local url_obj   = aip.web.parse_url(href)
       local page_url  = url_obj.page_url
       local url_path  = url_obj.path
@@ -117,8 +118,8 @@ function process_links(links, page_urls_map)
 
         -- make sure we do not process twice
         if pass then
-          local links = process_url(page_url).links
-          table.insert(links_queue, links)
+          local res_links = process_url(page_url).links
+          table.insert(links_queue, { links = res_links, page_url = page_url })
           page_urls_map[page_url] = true
         end
       end
@@ -137,12 +138,12 @@ local links       = process_url(FIRST_PAGE).links
 page_urls_map[FIRST_PAGE] = true
 
 -- Process the links and get a links_queue
-local links_queue = process_links(links, page_urls_map)
+local links_queue = process_links(links, page_urls_map, FIRST_PAGE)
 
 -- Final process of each links in the links_queue
 -- Note: We do not go recursive, just one level down
-for i, links in ipairs(links_queue) do
-  process_links(links, page_urls_map)
+for i, item in ipairs(links_queue) do
+  process_links(item.links, page_urls_map, item.page_url)
 end
 
 local final_msg = "✅ Slim completed. " .. global_page_counter .. " files processed."

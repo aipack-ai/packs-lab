@@ -32,6 +32,19 @@
 //     "concurrency": 12
 // }
 
+// -- IMFusion (C++ SDK, medical imaging)
+// {
+//         "out_dir": "_ako-out",
+//        "base_url": "https://docs.imfusion.com/",
+//      "first_page": "https://docs.imfusion.com/cppsdk/index.html",
+//     "filter_path": "/cppsdk",
+//       "max_pages": 10,
+//   "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
+//   "augment_model": "gpt-5-mini-low", // Models can be any providers "gemini-2.5-flash"
+//      "llms_model": "gpt-5-mini",
+//     "concurrency": 12
+// }
+
 // -- Tauri Web Site 
 // {
 //         "out_dir": "_ako-out",

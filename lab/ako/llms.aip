@@ -23,7 +23,7 @@ local config = init_res.data
 
 local settings = p_utils.build_settings(config)
 
-local files = aip.file.list(settings.dir_2_raw_md .. "/**/*.md")
+local files = aip.file.list(settings.dir_3_final_md .. "/**/*.md")
 
 local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
@@ -74,7 +74,8 @@ Here are all of the files we need to build a llms.md for.
 
 {{/each}}
 
-Make sure that for each file you add the description of the file. 
+- Make sure that for each file you add the description of the file. 
+- Make sure the link paths are relative to the root website site (wihtout the leading /, and not including the `{{data.dir_3_final_md}}` prefix)
 
 # Output
 

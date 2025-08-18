@@ -83,16 +83,21 @@ return {
 
 # Instruction
 
-You need to clean up the markdown:
-- Make it well-structured, with markdown sections. 
-- Remove site navigation section. Just page content should be kept
-- Use the `-` character for bullet points.
-- Sometime the markdown link text has extract empty line, make sure they are all in one line. So, inside the `[ ... ]` should not have new line. 
+
+- Make it well-structured, with markdown sections.
+- Remove the site navigation section; only page content should be kept.
+- Use the - character for bullet points.
+- Sometimes the markdown link text has an extra blank line; make sure they are all on one line. Inside the [ ... ] there should not be any newline.
 - Identify possible code blocks:
   - Remove line numbers.
   - Wrap them in markdown code blocks with the appropriate language.
-  - Only use code block language 'json' for valid json content, otherwise 'js' for js like, or 'text'
+  - Only use the code block language 'json' for valid JSON content; otherwise 'js' for JavaScript-like content, or 'text'.
   - Indent the code properly.
+- For the main page title, use the # level.
+- Do not separate sections with `---`
+
+
+Here is the raw content
 
 ````md
 {{data.raw_md_file.content}}
