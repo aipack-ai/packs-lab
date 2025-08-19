@@ -45,7 +45,7 @@ if init_res.type == "config" then
   local orig_html_total_size = nil
   local raw_md_total_size = nil
   -- We perform the fetch & slim
-  if config.skip_fetch_slim ~= true then
+  if config.do_fetch_slim == nil or config.do_fetch_slim == true then
     local slim_data      = aip.agent.run("fetch-slim", {inputs = { config.config_path } }).after_all
     num_of_files         = slim_data.num_of_files
     orig_html_total_size = slim_data.orig_html_total_size
@@ -54,7 +54,7 @@ if init_res.type == "config" then
   else
     local orig_stats     = aip.file.stats(settings.dir_0_original .. "/**/*")
     local raw_stats      = aip.file.stats(settings.dir_2_raw_md .. "/**/*")
-    num_of_files         = orig_stats.number_of_files
+    num_of_files         = raw_stats.number_of_files -- this way allows to just use the agument 
     orig_html_total_size = orig_stats.total_size
     raw_md_total_size    = raw_stats.total_size
     slim_msg = slim_msg .. "(skipped) "
