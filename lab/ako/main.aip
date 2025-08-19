@@ -3,6 +3,11 @@
 ```lua
 local p_utils = require("prompt_utils")
 
+-- 
+local LABEL_FETCH_SLIM = "Fetch & Slim Agent:"
+local LABEL_AUGMENT    = "     Augment Agent:"
+local LABEL_LLMS       = "  llms Index Agent:"
+
 -- If return a string, means not valid, and it's the message
 local valid = p_utils.validate_aip_version()
 if type(valid) == "string" then
@@ -27,22 +32,22 @@ if init_res.type == "config" then
 
   local settings = p_utils.build_settings(config)
 
-  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "⏸ Queued"})
-  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "⏸ Queued"})
-  aip.run.pin("llms", 2, { label = "   llms Agent:", content = "⏸ Queued"})
+  aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "⏸ Queued"})
+  aip.run.pin("augm", 1,       { label = LABEL_AUGMENT, content = "⏸ Queued"})
+  aip.run.pin("llms", 2,       { label = LABEL_LLMS, content = "⏸ Queued"})
 
   -- == Run Slim
-  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "▶ Running"})
+  aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "▶ Running"})
 
-  local slim_data = aip.agent.run("slim", {inputs = { config.config_path } }).after_all
+  local slim_data = aip.agent.run("fetch-slim", {inputs = { config.config_path } }).after_all
   
   local slim_msg = "" .. slim_data.num_of_files .. " pages processed."
   slim_msg = slim_msg .. " " .. aip.text.format_size(slim_data.orig_html_total_size, {trim = true})
   slim_msg = slim_msg .. " ➜ " .. aip.text.format_size(slim_data.raw_md_total_size, {trim = true})
-  aip.run.pin("slim", 0, { label = "   Slim Agent:", content = "✅ DONE - " .. slim_msg})
+  aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "✅ DONE - " .. slim_msg})
   
   -- == Run Augment
-  aip.run.pin("augm", 1, { label = "Augment Agent:", content = "▶ Running"})
+  aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = "▶ Running"})
 
   local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
   local agument_msg = "✅ DONE - " .. augment_data.processed_count .. " AI Augmented"
@@ -51,16 +56,16 @@ if init_res.type == "config" then
   end
   agument_msg = agument_msg .. " " .. aip.text.trim(augment_data.raw_size_fmt) .. " ➜ " .. aip.text.trim(augment_data.final_size_fmt)
 
-  aip.run.pin("augm", 1, { label = "Augment Agent:", content = agument_msg })
+  aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = agument_msg })
 
   -- == Run llms
-  aip.run.pin("llms", 2, { label = "   llms Agent:", content = "▶ Running"})
+  aip.run.pin("llms", 2, { label = LABEL_LLMS, content = "▶ Running"})
 
-  local llms_data = aip.agent.run("llms", {inputs = { config.config_path } }).after_all
+  local llms_data = aip.agent.run("llms-index", {inputs = { config.config_path } }).after_all
   local llms_size_fmt = aip.text.format_size(llms_data.llms_size, { trim = true})
   local llms_msg = "✅ DONE ➜ " .. llms_data.llms_path .. " (" .. llms_size_fmt .. ")"
   
-  aip.run.pin("llms", 2,  { label = "   llms Agent:", content = llms_msg})
+  aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
 
   -- == Pin final
   local original_size_fmt = aip.text.format_size(slim_data.orig_html_total_size, "MB")
