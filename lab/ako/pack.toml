@@ -7,8 +7,8 @@ version = "0.1.0"
 license  = "MIT or Apache 2"
 homepage = "https://aipack.ai/"
 repo     = "https://github.com/aipack-ai/aipack-lab"
-author = "Jeremy Chone"
-email = "jeremy.chone@gmail.com"
+author   = "Jeremy Chone"
+email    = "jeremy.chone@gmail.com"
 
 
 
