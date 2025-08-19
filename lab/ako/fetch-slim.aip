@@ -75,7 +75,7 @@ function process_url(url_str)
 
   local progress_msg = ""
   progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size, "MB")
-  progress_msg  = progress_msg .. "\n  Slimed HTMLs: " .. aip.text.format_size(global_total_slim_size, "MB")
+  progress_msg  = progress_msg .. "\n Slimmed HTMLs: " .. aip.text.format_size(global_total_slim_size, "MB")
   progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size, "MB")
   aip.run.pin("progress", 0, {label = "     Sizes:", content = progress_msg})
 
