@@ -49,11 +49,24 @@ end
 -- returns { config, base_data_dir, url_obj, dir_... }
 function build_settings(config) 
 
-  local url_obj   = aip.web.parse_url(config.base_url)
+  local src_type = nil -- "web" | "dir"
+  local base_data_dir = nil
+  if config.base_url then
+    local url_obj   = aip.web.parse_url(config.base_url)
+    base_data_dir = config.out_dir .. "/" .. url_obj.host
+    src_type = "web"
+  elseif config.base_dir then
+    src_type = "file"
+    local base_dir_obj = aip.path.parse(config.base_dir)
+    base_data_dir = config.out_dir .. "base_dir_obj" .. base_dir_obj.stem
+  else
+    error("ako-config.jsonc must have base_url or _base_dir")
+  end
 
-  local base_data_dir = config.out_dir .. "/" .. url_obj.host
+  
 
   return {
+    src_type        = src_type,
     config          = config,
 
     base_data_dir   = base_data_dir,
