@@ -2,6 +2,7 @@
 
 ```lua
 local p_utils = require("prompt_utils")
+local f_utils = require("fetch_utils")
 
 -- input is nil or the config_path
 local init_res = p_utils.init_config(input)
@@ -14,140 +15,114 @@ end
 -- Assuming type = "config"
 local config = init_res.data
 
-local SETTINGS = p_utils.build_settings(config)
+local settings = p_utils.build_settings(config)
 
-local CONFIG = SETTINGS.config
+-- local CONFIG = SETTINGS.config
 
-local BASE_URL       = CONFIG.base_url
-local FIRST_PAGE     = CONFIG.first_page
-local FILTER_PATH    = CONFIG.filter_path
-local MAX_PAGES      = CONFIG.max_pages
+local FIRST_PAGE     = config.first_page
+-- local BASE_URL       = CONFIG.base_url
+-- local FILTER_PATH    = CONFIG.filter_path
+-- local MAX_PAGES      = CONFIG.max_pages
 
-local HAS_EXCLUDE_GLOBS  = config.exclude_globs and next(config.exclude_globs) ~= nil 
-local EXCLUDE_GLOBS      = config.exclude_globs
+local has_exclude_globs  = config.exclude_globs and next(config.exclude_globs) ~= nil 
 
-local global_page_counter      = 0
-local global_total_orig_size   = 0
-local global_total_slim_size   = 0
-local global_total_md_raw_size = 0
+local fetch_ctx = {
+  has_exclude_globs = has_exclude_globs, -- probably need to be in config
+  settings          = settings,
+  page_counter      = 0,
+  total_orig_size   = 0,
+  total_slim_size   = 0,
+  total_md_raw_size = 0,
+}
 
-function process_url(url_str)
-  local url_obj   = aip.web.parse_url(url_str)
-  aip.run.pin("process", 1, {label = "Processing:", content = url_str})
+-- === fetch_ctx methods
 
-  local url       = url_obj.url
-  local host      = url_obj.host
-  local path_obj  = aip.path.parse(url_obj.path)
+-- where path is without extension (e.g.,  path_obj.dir .. "/" .. stem)
+function fetch_ctx:path_0_orig_html(path) 
+  path = path_to_base_path(path)
+  return self.settings.dir_0_original .. "/" .. path .. ".html"
+end
+
+-- where path is without extension (e.g.,  path_obj.dir .. "/" .. stem)
+function fetch_ctx:path_1_slim_html(path) 
+  path = path_to_base_path(path)
+  return self.settings.dir_1_slim_html .. "/" .. path .. ".html"
+end  
+
+-- where path is without extension (e.g.,  path_obj.dir .. "/" .. stem)
+function fetch_ctx:path_2_raw_md(path) 
+  path = path_to_base_path(path)
+  return self.settings.dir_2_raw_md .. "/" .. path .. ".md"
+end  
+
+-- return path without extension
+function path_to_base_path(path)
+  local path_obj  = aip.path.parse(path)
   local stem      = path_obj.stem
   if stem == "" then
     stem = "index"
   end
+  -- TODO: if dir empty, then no need to have / prefix
   local base_path = path_obj.dir .. "/" .. stem
+  return base_path
+end
 
-  local html_res     = aip.web.get(url)
-  local html_content = html_res.content
+-- === /fetch_ctx methods
 
-  local original_html_path = SETTINGS.dir_0_original .. "/" .. base_path .. ".html"
-  local original_html_file = aip.file.save(original_html_path, html_content)
-  global_total_orig_size = global_total_orig_size + original_html_file.size
+-- WEB processing
+if fetch_ctx.settings.src_type == "web" then
+  -- Map of all of the page_url already processed
+  -- NOTE: this also contain the excluded from globs (so that we do not double print)
+  local page_urls_map = {}
 
-  local links = aip.html.select(html_content, "a[href]")
+  -- Process initial page, links in the page
+  local links       = f_utils.process_url(FIRST_PAGE, fetch_ctx).links
+  page_urls_map[FIRST_PAGE] = true
 
-  local slim_html_path =  SETTINGS.dir_1_slim_html .. "/" .. base_path .. ".html"
-  local html_slim_file = aip.file.save_html_to_slim(original_html_path, slim_html_path)
-  global_total_slim_size = global_total_slim_size + html_slim_file.size
+  -- Process the links and get a links_queue
+  local links_queue = f_utils.process_links(links, page_urls_map, FIRST_PAGE, fetch_ctx)
 
-  local raw_md_path = SETTINGS.dir_2_raw_md .. "/" .. base_path .. ".md"
-  local raw_md_file = aip.file.save_html_to_md(slim_html_path, raw_md_path)
-  global_total_md_raw_size = global_total_md_raw_size + raw_md_file.size
-
-  global_page_counter = global_page_counter + 1
-
-  local pages_msg = nil
-  if global_page_counter >= MAX_PAGES then
-    pages_msg = "✔ "
-  else 
-    pages_msg = "▶ "
+  -- Final process of each links in the links_queue
+  -- Note: We do not go recursive, just one level down
+  for i, item in ipairs(links_queue) do
+    f_utils.process_links(item.links, page_urls_map, item.page_url, fetch_ctx)
   end
-  pages_msg = pages_msg .. global_page_counter .. "/" .. MAX_PAGES
 
-  aip.run.pin("num_pages", 0, {label = "     Pages:", content = pages_msg})
+-- FILE processing
+elseif fetch_ctx.settings.src_type == "file" then
+  local config    = fetch_ctx.settings.config
+  local base_dir  = config.base_dir
+  local max_pages = config.max_pages
+  local src_globs = config.base_dir .. "/" .. config.globs
 
-  local progress_msg = ""
-  progress_msg =  progress_msg ..   "Original HTMLs: " .. aip.text.format_size(global_total_orig_size, "MB")
-  progress_msg  = progress_msg .. "\n Slimmed HTMLs: " .. aip.text.format_size(global_total_slim_size, "MB")
-  progress_msg  = progress_msg .. "\n Raw Markdowns: " .. aip.text.format_size(global_total_md_raw_size, "MB")
-  aip.run.pin("progress", 0, {label = "     Sizes:", content = progress_msg})
+  local all_files = aip.file.list(src_globs)
 
-  return {
-    original_html_file = original_html_file,
-    html_slim_file     = html_slim_file,
-    raw_md_file        = raw_md_file,
-    links              = links,
-  }
+  for i, file in ipairs(all_files) do
+    if fetch_ctx.page_counter >= max_pages then
+      break
+    end
+    local rel_path = aip.path.diff(file.path, base_dir)
+    
+    local raw_md_path = fetch_ctx:path_2_raw_md(rel_path)
 
-end
-
-function process_links(links, page_urls_map, current_page_url) 
-  local links_queue = {}
-  for i, link in ipairs(links) do
-      -- Resolve relative hrefs against the current page URL to preserve directory context
-      local href      = aip.web.resolve_href(link.attrs.href, current_page_url)
-      local url_obj   = aip.web.parse_url(href)
-      local page_url  = url_obj.page_url
-      local url_path  = url_obj.path
-      local url       = url_obj.url
-
-      if global_page_counter >= MAX_PAGES then
-        return links_queue
-      end
-
-      -- if href starts with FILTER_PATH
-      if url:sub(1, #BASE_URL) == BASE_URL and url_path:sub(1, #FILTER_PATH) == FILTER_PATH then
-        -- if not already processed
-        local pass = not page_urls_map[page_url]
-        
-        -- if not in exclude (make sure to test pass so that we do not double print)
-        if pass and HAS_EXCLUDE_GLOBS then
-          if aip.path.matches_glob(url_path, EXCLUDE_GLOBS) then 
-            print("Exclude glob path (from exclude_globs) " .. url_path)
-            page_urls_map[page_url] = true
-            pass = false
-          end
-        end
-
-        -- make sure we do not process twice
-        if pass then
-          local res_links = process_url(page_url).links
-          table.insert(links_queue, { links = res_links, page_url = page_url })
-          page_urls_map[page_url] = true
-        end
-      end
-
-      ::continue::
+    if not aip.path.exists(raw_md_path) then 
+      f_utils.process_file(file, fetch_ctx)
+    end
+    
+    -- print(base_path)
+    -- local html_slim_file = aip.file.save_html_to_slim(file.path, fetch_ctx:path_1_slim_html(base_path))
+    -- fetch_ctx.page_counter = fetch_ctx.page_counter + 1
+    -- fetch_ctx.total_md_raw_size = fetch_ctx.total_md_raw_size + html_slim_file.size
   end
-  return links_queue
+  
+  -- print(#all_files)
+  -- return aip.flow.skip("src_type '" .. fetch_ctx.settings.src_type .. "' not supported")
+else 
+  return aip.flow.skip("src_type '" .. fetch_ctx.settings.src_type .. "' not supported")
 end
 
--- Map of all of the page_url already processed
--- NOTE: this also contain the excluded from globs (so that we do not double print)
-local page_urls_map = {}
-
--- Process initial page, links in the page
-local links       = process_url(FIRST_PAGE).links
-page_urls_map[FIRST_PAGE] = true
-
--- Process the links and get a links_queue
-local links_queue = process_links(links, page_urls_map, FIRST_PAGE)
-
--- Final process of each links in the links_queue
--- Note: We do not go recursive, just one level down
-for i, item in ipairs(links_queue) do
-  process_links(item.links, page_urls_map, item.page_url)
-end
-
-local final_msg = "✅ Slim completed. " .. global_page_counter .. " files processed."
-local sizes_msg = aip.text.format_size(global_total_orig_size) .. " ➜ " .. aip.text.format_size(global_total_md_raw_size)
+local final_msg = "✅ Slim completed. " .. fetch_ctx.page_counter .. " files processed."
+local sizes_msg = aip.text.format_size(fetch_ctx.total_orig_size) .. " ➜ " .. aip.text.format_size(fetch_ctx.total_md_raw_size)
 sizes_msg = aip.text.trim(sizes_msg)
 final_msg = final_msg .. "\n   " .. sizes_msg
 aip.run.pin("process", 1, {label = "      DONE:", content = final_msg})
@@ -156,9 +131,9 @@ aip.run.pin("process", 1, {label = "      DONE:", content = final_msg})
 return aip.flow.before_all_response({
   inputs     = {},
   before_all = {
-    num_of_files          = global_page_counter,
-    orig_html_total_size  = global_total_orig_size,
-    raw_md_total_size     = global_total_md_raw_size,
+    num_of_files          = fetch_ctx.page_counter,
+    orig_html_total_size  = fetch_ctx.total_orig_size,
+    raw_md_total_size     = fetch_ctx.total_md_raw_size,
   }
 })
 ```

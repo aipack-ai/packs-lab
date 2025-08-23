@@ -58,14 +58,14 @@ function build_settings(config)
   elseif config.base_dir then
     src_type = "file"
     local base_dir_obj = aip.path.parse(config.base_dir)
-    base_data_dir = config.out_dir .. "base_dir_obj" .. base_dir_obj.stem
+    base_data_dir = config.out_dir .. "/" .. base_dir_obj.stem
   else
     error("ako-config.jsonc must have base_url or _base_dir")
   end
 
-  
+  print("base_data_dir", base_data_dir)
 
-  return {
+  local settings = {
     src_type        = src_type,
     config          = config,
 
@@ -75,6 +75,8 @@ function build_settings(config)
     dir_2_raw_md    = base_data_dir .. "/2-raw-md",
     dir_3_final_md  = base_data_dir .. "/3-final-md",
   }
+
+  return settings
 
 end
 
