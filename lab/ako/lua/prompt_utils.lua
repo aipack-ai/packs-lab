@@ -54,8 +54,7 @@ function build_settings(config)
   local base_data_dir = config.out_dir .. "/" .. url_obj.host
 
   return {
-    config         = config,
-    base_url_obj   = base_url_obj,
+    config          = config,
 
     base_data_dir   = base_data_dir,
     dir_0_original  = base_data_dir .. "/0-original",
