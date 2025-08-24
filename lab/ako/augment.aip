@@ -71,11 +71,20 @@ end
 
 raw_md_file = aip.file.load(raw_md_file.path)
 
+local prompt_path = before_all.settings.config.augment_prompt
+local custom_prompt = nil
+if prompt_path and aip.path.exists(prompt_path) then
+  custom_prompt = aip.file.load(prompt_path).content
+end
+
 aip.run.pin("progress", 0, {label = "Progress:", content = "➜ " .. raw_md_file.path})
 
+print("custom_prompt", custom_prompt)
+
 return {
-    raw_md_file = raw_md_file,
-    dest_path   = dest_path
+    raw_md_file   = raw_md_file,
+    dest_path     = dest_path,
+    custom_prompt = custom_prompt
 }
 ```
 
@@ -106,6 +115,16 @@ Here is the raw content
 
 Return the full file content as is without 
 the surrounding in a markdown code block.
+
+# Instruction
+
+{{#if data.custom_prompt}}
+
+Here are some important additional instructions on how to process this raw markdown file
+
+{{data.custom_prompt}}
+
+{{/if}}
 
 
 # Output 
