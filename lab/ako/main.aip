@@ -51,7 +51,11 @@ if init_res.type == "config" then
     orig_html_total_size = slim_data.orig_html_total_size
     raw_md_total_size    = slim_data.raw_md_total_size
   -- We skip the fetch & slim
-  else
+  end
+
+  -- If we do not have a num_of_files (when do_fetch_slim == false ) or was 0
+  -- Might still have files to be processed
+  if num_of_files == nil or num_of_files == 0 then
     local orig_stats     = aip.file.stats(settings.dir_0_original .. "/**/*")
     local raw_stats      = aip.file.stats(settings.dir_2_raw_md .. "/**/*")
     num_of_files         = raw_stats.number_of_files -- this way allows to just use the agument 
@@ -86,13 +90,15 @@ if init_res.type == "config" then
   aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = agument_msg })
 
   -- == Run llms
-  aip.run.pin("llms", 2, { label = LABEL_LLMS, content = "▶ Running"})
-
-  local llms_data = aip.agent.run("llms-index", {inputs = { config.config_path } }).after_all
-  local llms_size_fmt = aip.text.format_size(llms_data.llms_size, { trim = true})
-  local llms_msg = "✅ DONE ➜ " .. llms_data.llms_path .. " (" .. llms_size_fmt .. ")"
-  
-  aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
+  if settings.config.do_llms == nil or settings.config.do_llms == true then 
+     aip.run.pin("llms", 2, { label = LABEL_LLMS, content = "▶ Running"})
+     
+     local llms_data = aip.agent.run("llms-index", {inputs = { config.config_path } }).after_all
+     local llms_size_fmt = aip.text.format_size(llms_data.llms_size, { trim = true})
+     local llms_msg = "✅ DONE ➜ " .. llms_data.llms_path .. " (" .. llms_size_fmt .. ")"
+     
+     aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
+  end
 
   -- == Pin final
   local original_size_fmt = aip.text.format_size(orig_html_total_size, "MB")

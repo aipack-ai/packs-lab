@@ -30,17 +30,44 @@ end
 -- Assuming type = "config"
 local config = init_res.data
 
-local settings = p_utils.build_settings(config)
+local settings  = p_utils.build_settings(config)
+local max_pages = settings.config.max_pages
 
 local files = aip.file.list(settings.dir_2_raw_md  .. "/**/*.md")
+
+
+local already_processed_count = 0
+local inputs = {}
+
 for  i, file in ipairs(files) do
-    file._display = file.path
+    if #inputs >= max_pages then
+      break
+    end
+
+    local raw_md_file = file
+
+    local rel_path   = aip.path.diff(raw_md_file.path, settings.dir_2_raw_md)
+    local dest_path  = settings.dir_3_final_md .. "/" .. rel_path
+
+    if not aip.path.exists(dest_path) then
+        local input = {
+          _display    = raw_md_file.path,
+          raw_md_file = raw_md_file,
+          dest_path   = dest_path,
+        }
+        table.insert(inputs,input)
+    else
+      already_processed_count = already_processed_count + 1
+    end
+
+
+    ::continue::
 end
 
 -- files = { files[1] }
 
 return aip.flow.before_all_response({
-    inputs     = files,
+    inputs     = inputs,
     options    = { 
         input_concurrency = config.concurrency, -- if nil, will be the default from aipack
         model = config.augment_model, -- if nil, will be the default from aipack
@@ -56,13 +83,12 @@ return aip.flow.before_all_response({
 # Data
 
 ```lua
+if input == nil then
+  return aip.flow.skip("All files was already AI Augmented")
+end
 
-local raw_md_file = input
-
-local dest_dir = before_all.settings.dir_3_final_md
-
-local rel_path      = aip.path.diff(raw_md_file.path, before_all.settings.dir_2_raw_md)
-local dest_path     = dest_dir .. "/" .. rel_path
+local raw_md_file = input.raw_md_file
+local dest_path   = input.dest_path
 
 -- if the dest path already exist, we skip
 if aip.path.exists(dest_path) then
@@ -78,8 +104,6 @@ if prompt_path and aip.path.exists(prompt_path) then
 end
 
 aip.run.pin("progress", 0, {label = "Progress:", content = "➜ " .. raw_md_file.path})
-
-print("custom_prompt", custom_prompt)
 
 return {
     raw_md_file   = raw_md_file,
@@ -138,7 +162,7 @@ aip.file.save(data.dest_path, content)
 
 -- aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
 
-return "➜ " .. data.dest_path
+return "" .. data.dest_path
 ```
 
 # After All 

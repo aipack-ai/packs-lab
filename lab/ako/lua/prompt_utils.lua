@@ -63,8 +63,6 @@ function build_settings(config)
     error("ako-config.jsonc must have base_url or _base_dir")
   end
 
-  print("base_data_dir", base_data_dir)
-
   local settings = {
     src_type        = src_type,
     config          = config,

@@ -23,7 +23,12 @@ local config = init_res.data
 
 local settings = p_utils.build_settings(config)
 
-local files = aip.file.list(settings.dir_3_final_md .. "/**/*.md")
+local globs = {
+  settings.dir_3_final_md .. "/**/*.md",
+  "!" .. settings.dir_3_final_md .. "/**/llms.md"
+}
+
+local files = aip.file.list(globs)
 
 local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
