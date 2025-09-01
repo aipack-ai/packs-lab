@@ -180,6 +180,10 @@ end
 
 local msg = "✅ DONE - " .. processed_count .. " AI Augmented"
 local skipped_count = input_len - processed_count
+-- for now, update the skipped_count if nothing was processed
+if processed_count == 0 and input_len ==1  then
+  skipped_count = before_all.total_files
+end
 if skipped_count > 0 then
     msg = msg .. " - " .. skipped_count .. " already processed."
 end
