@@ -6,43 +6,15 @@
 // - Recommendation: Start with a relatively low max_pages number, like 10, and then
 //                   increase it when you have achieved the desired result on the small subset.
 
-// -- Alchemy (blockchain)
-// {
-//           "out_dir": "_ako-out",
-//          "base_url": "https://www.alchemy.com/",
-//        "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
-//       "filter_path": "/docs",
-//         "max_pages": 10,
-//     "exclude_globs": ["**/{debug,llms}*"],
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
-//        "llms_model": "gpt-5-mini",
-//       "concurrency": 6
-// }
-
 // -- OpenAI Cookbook
 // {
 //           "out_dir": "_ako-out",
 //          "base_url": "https://cookbook.openai.com/",
-//        "first_page": "https://cookbook.openai.com/examples/gpt4-1_prompting_guide",
-//       "filter_path": "/",
+//        "first_page": "https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide",
+//       "filter_path": "/examples/gpt-5/",
 //         "max_pages": 10,
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //     "augment_model": "gpt-5-nano",
-//        "llms_model": "gpt-5-mini",
-//       "concurrency": 6
-// }
-
-// -- IMFusion (C++ SDK, medical imaging)
-// {
-//           "out_dir": "_ako-out",
-//          "base_url": "https://docs.imfusion.com/",
-//        "first_page": "https://docs.imfusion.com/cppsdk/index.html",
-//       "filter_path": "/cppsdk",
-//         "max_pages": 10,
-//     "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
 //        "llms_model": "gpt-5-mini",
 //       "concurrency": 6
 // }
@@ -59,3 +31,51 @@
 //        "llms_model": "gpt-5-mini",
 //       "concurrency": 6
 // }
+
+// -- Alchemy (blockchain)
+// {
+//           "out_dir": "_ako-out",
+//          "base_url": "https://www.alchemy.com/",
+//        "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
+//       "filter_path": "/docs",
+//         "max_pages": 10,
+//     "exclude_globs": ["**/{debug,llms}*"],
+//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//        "llms_model": "gpt-5-mini",
+//       "concurrency": 6
+// }
+
+
+
+// -- IMFusion (C++ SDK, medical imaging)
+// {
+//           "out_dir": "_ako-out",
+//          "base_url": "https://docs.imfusion.com/",
+//        "first_page": "https://docs.imfusion.com/cppsdk/index.html",
+//       "filter_path": "/cppsdk",
+//         "max_pages": 10,
+//     "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
+//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//        "llms_model": "gpt-5-mini",
+//       "concurrency": 6
+// }
+
+// -- Local Files
+//           "out_dir": "_ako-out",
+//   // -- Fetch  
+//     "do_fetch_slim": false, // allows skipping the fetch/slim step (assumes the data is already there)          
+// 			   "base_dir": "path/to/dir/",
+//             "globs": "**/*.html",
+//         "max_pages": 600,
+//     "exclude_globs": ["**/{debug,llms}*"],
+//   // -- Augment
+//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//    "augment_prompt": "./my-augment-instruction.md", // Additional Augment prompt
+//       "concurrency": 16,
+//   // -- llms
+//           "do_llms": false,
+//        "llms_model": "gpt-5-mini"
+// }
+

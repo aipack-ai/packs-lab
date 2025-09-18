@@ -1,8 +1,8 @@
 # This is the AIPACK lab@ako AI Pack for Agentic Knowledge Optimization
 [pack]
 namespace = "lab" # aipack.ai lab namespace
-name = "ako"      # pack name (so aip install lab@ako)
-version = "0.1.0"
+name      = "ako"      # pack name (so aip install lab@ako)
+version   = "0.1.0"
 
 license  = "MIT or Apache 2"
 homepage = "https://aipack.ai/"
