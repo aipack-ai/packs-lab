@@ -33,7 +33,12 @@ function init_config(input)
         type = "message",
         data = msg
       }
-  end  
+  end
+
+  -- == Needs to remove the starting "./" as aip.path.diff will create wrong path (will be solved in future aipack)
+  if config.base_dir and type(config.base_dir) == "string" then
+    config.base_dir = config.base_dir:gsub("^%./", "")
+  end
 
   -- == Otherise, we can return the config
   -- Add config_path

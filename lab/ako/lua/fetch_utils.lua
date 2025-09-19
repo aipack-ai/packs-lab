@@ -71,8 +71,11 @@ function process_content(src_path, html_content, fetch_ctx)
   local config    = fetch_ctx.settings.config
   local max_pages = config.max_pages
 
+  print("processing content: ", src_path)
+
   -- TODO: eventually should support "stream save" (copy when file, stream save for web get)
   local original_html_path = fetch_ctx:path_0_orig_html(src_path)
+  print("original_html_path: ", original_html_path)
   local orig_html_file = aip.file.save(original_html_path, html_content)
   
   fetch_ctx.total_orig_size = fetch_ctx.total_orig_size + orig_html_file.size

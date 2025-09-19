@@ -101,10 +101,10 @@ elseif fetch_ctx.settings.src_type == "file" then
     if fetch_ctx.page_counter >= max_pages then
       break
     end
-    local rel_path = aip.path.diff(file.path, base_dir)
-    
-    local raw_md_path = fetch_ctx:path_2_raw_md(rel_path)
 
+    -- local rel_path = aip.path.diff(file.path, base_dir)
+    local raw_md_path = fetch_ctx:path_2_raw_md(file.path)
+    print("raw_md_path", raw_md_path)
     if not aip.path.exists(raw_md_path) then 
       f_utils.process_file(file, fetch_ctx)
     end

@@ -119,7 +119,7 @@ return {
 
 - Make it well-structured, with markdown sections.
 - Remove the site navigation section; only page content should be kept.
-- Use the - character for bullet points.
+- Use the dash character `-` for bullet points.
 - Sometimes the markdown link text has an extra blank line; make sure they are all on one line. Inside the [ ... ] there should not be any newline.
 - Identify possible code blocks:
   - Remove line numbers.
