@@ -9,49 +9,53 @@
 //// OpenAI Cookbook
 // {
 //           "out_dir": "_ako-out",
-// // Fetch 					
+// // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://cookbook.openai.com/",
 //        "first_page": "https://cookbook.openai.com/",
 //       "filter_path": "/examples/",
 //         "max_pages": 10,
-// // Augment
+// // -- Augment
 //      "augment_model": "lite",
 // 		   "concurrency": 6,
 //     "augment_prompt": "./my-augment-instruction.md", // Ignored if not found
-// // llms index
-//        "do_llms": false,
+// // -- llms index
+//        "do_llms": true,
 // 		"llms_model": "gpt-5-mini"
 // }
 
 //// Alchemy (blockchain)
 // {
 //           "out_dir": "_ako-out",
+// // -- Fetch
+//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://www.alchemy.com/",
 //        "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //       "filter_path": "/docs",
 //         "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
 //     "exclude_globs": ["**/{debug,llms}*"],
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+// // -- Augment
 //     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
-//        "llms_model": "gpt-5-mini",
-//       "concurrency": 6
+//       "concurrency": 6,
+// // -- llms index
+//           "do_llms": true,
+//        "llms_model": "gpt-5-mini"
 // }
 
 //// Local Files
 // {
 //           "out_dir": "_ako-out",
-// // Fetch  
+// // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)          
 // 			    "base_dir": "path/to/dir/",
 //             "globs": "**/*.html",
 //         "max_pages": 10,
 //     "exclude_globs": ["**/{debug,llms}*"],
-// // Augment
+// // -- Augment
 //     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
 //    "augment_prompt": "./my-augment-instruction.md", // Additional Augment prompt
 //       "concurrency": 16,
-// // llms
+// // -- llms index
 //           "do_llms": true,
 //        "llms_model": "gpt-5-mini"
 // }
@@ -60,28 +64,36 @@
 //// Tauri Web Site 
 // {
 //           "out_dir": "_ako-out",
+// // -- Fetch
+//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://tauri.app/",
 //        "first_page": "https://tauri.app/reference/acl/capability/",
 //       "filter_path": "/reference/",
 //         "max_pages": 10,
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+// // -- Augment
 //     "augment_model": "gpt-5-nano",
-//        "llms_model": "gpt-5-mini",
-//       "concurrency": 6
+//       "concurrency": 6,
+// // -- llms index
+//           "do_llms": true,
+//        "llms_model": "gpt-5-mini"
 // }
 
 //// IMFusion (C++ SDK, medical imaging)
 // {
 //           "out_dir": "_ako-out",
+// // -- Fetch
+//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://docs.imfusion.com/",
 //        "first_page": "https://docs.imfusion.com/cppsdk/index.html",
 //       "filter_path": "/cppsdk",
 //         "max_pages": 10,
 //     "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+// // -- Augment
 //     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
-//        "llms_model": "gpt-5-mini",
-//       "concurrency": 6
+//       "concurrency": 6,
+// // -- llms index
+//           "do_llms": true,
+//        "llms_model": "gpt-5-mini"
 // }
 
 
