@@ -17,11 +17,11 @@
 //         "max_pages": 10,
 // // -- Augment
 //      "augment_model": "lite",
-// 		   "concurrency": 6,
+//        "concurrency": 6,
 //     "augment_prompt": "./my-augment-instruction.md", // Ignored if not found
 // // -- llms index
 //        "do_llms": true,
-// 		"llms_model": "gpt-5-mini"
+//     "llms_model": "gpt-5-mini"
 // }
 
 //// Alchemy (blockchain)
@@ -47,7 +47,7 @@
 //           "out_dir": "_ako-out",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)          
-// 			    "base_dir": "path/to/dir/",
+//          "base_dir": "path/to/dir/",
 //             "globs": "**/*.html",
 //         "max_pages": 10,
 //     "exclude_globs": ["**/{debug,llms}*"],
