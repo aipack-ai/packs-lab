@@ -21,7 +21,7 @@
 //     "augment_prompt": "./my-augment-instruction.md", // Ignored if not found
 // // -- llms index
 //        "do_llms": true,
-//     "llms_model": "gpt-5-mini"
+//     "llms_model": "gemini-flash-latest"
 // }
 
 //// Alchemy (blockchain)
@@ -33,13 +33,13 @@
 //        "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //       "filter_path": "/docs",
 //         "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
-//     "exclude_globs": ["**/{debug,llms}*"],
+//     "exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Augment
-//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//     "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //       "concurrency": 6,
 // // -- llms index
 //           "do_llms": true,
-//        "llms_model": "gpt-5-mini"
+//        "llms_model": "gemini-flash-latest"
 // }
 
 //// Local Files
@@ -52,12 +52,12 @@
 //         "max_pages": 10,
 //     "exclude_globs": ["**/{debug,llms}*"],
 // // -- Augment
-//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//     "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //    "augment_prompt": "./my-augment-instruction.md", // Additional Augment prompt
 //       "concurrency": 16,
 // // -- llms index
 //           "do_llms": true,
-//        "llms_model": "gpt-5-mini"
+//        "llms_model": "gemini-flash-latest"
 // }
 
 
@@ -71,11 +71,11 @@
 //       "filter_path": "/reference/",
 //         "max_pages": 10,
 // // -- Augment
-//     "augment_model": "gpt-5-nano",
+//     "augment_model": "gemini-flash-latest",
 //       "concurrency": 6,
 // // -- llms index
 //           "do_llms": true,
-//        "llms_model": "gpt-5-mini"
+//        "llms_model": "gemini-flash-latest"
 // }
 
 //// IMFusion (C++ SDK, medical imaging)
@@ -89,11 +89,11 @@
 //         "max_pages": 10,
 //     "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
 // // -- Augment
-//     "augment_model": "gpt-5-nano", // Models can be any providers "gemini-2.5-flash"
+//     "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //       "concurrency": 6,
 // // -- llms index
 //           "do_llms": true,
-//        "llms_model": "gpt-5-mini"
+//        "llms_model": "gemini-flash-latest"
 // }
 
 
