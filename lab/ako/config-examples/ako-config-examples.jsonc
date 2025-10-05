@@ -8,7 +8,7 @@
 
 //// OpenAI Cookbook
 // {
-//           "out_dir": "_ako-out",
+//           "out_dir": "out/ako",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://cookbook.openai.com/",
@@ -26,7 +26,7 @@
 
 //// Alchemy (blockchain)
 // {
-//           "out_dir": "_ako-out",
+//           "out_dir": "out/ako",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://www.alchemy.com/",
@@ -44,7 +44,7 @@
 
 //// Local Files
 // {
-//           "out_dir": "_ako-out",
+//           "out_dir": "out/ako",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)          
 //          "base_dir": "path/to/dir/",
@@ -63,7 +63,7 @@
 
 //// Tauri Web Site 
 // {
-//           "out_dir": "_ako-out",
+//           "out_dir": "out/ako",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://tauri.app/",
@@ -80,7 +80,7 @@
 
 //// IMFusion (C++ SDK, medical imaging)
 // {
-//           "out_dir": "_ako-out",
+//           "out_dir": "out/ako",
 // // -- Fetch
 //     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //          "base_url": "https://docs.imfusion.com/",
