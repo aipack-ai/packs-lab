@@ -47,12 +47,14 @@ for  i, file in ipairs(files) do
     local raw_md_file = file
 
     local rel_path   = aip.path.diff(raw_md_file.path, settings.dir_2_raw_md)
-    local dest_path  = settings.dir_3_final_md .. "/" .. rel_path
+    local sum_path   = settings.dir_3_sum_md .. "/" .. rel_path
+    local dest_path  = settings.dir_4_final_md .. "/" .. rel_path
 
     if not aip.path.exists(dest_path) then
         local input = {
           _display    = raw_md_file.path,
           raw_md_file = raw_md_file,
+          sum_path    = sum_path,
           dest_path   = dest_path,
         }
         table.insert(inputs,input)
@@ -116,6 +118,7 @@ return {
 
 # Instruction
 
+Your goal is to augment & fix the given file content following the following rules: 
 
 - Make it well-structured, with markdown sections.
 - Remove the site navigation section; only page content should be kept.
@@ -137,8 +140,13 @@ Here is the raw content
 {{data.raw_md_file.content}}
 ````
 
-Return the full file content as is without 
-the surrounding in a markdown code block.
+Return the full file agumented content under a <file_agumented_content>NEW_FILE_CONTENT</file_agumented_content>
+
+And the file summary under <file_summary_content>FILE_SUMMARY_CONTENT</file_summary_content>
+
+The FILE_SUMMARY_CONTENT should one concise sentence, empty line, and then 3 concise bullet points maximum.
+
+The NEW_FILE_CONTENT and FILE_SUMMARY_CONTENT should be without the surrounding in a markdown code block.
 
 # Instruction
 
@@ -156,9 +164,22 @@ Here are some important additional instructions on how to process this raw markd
 ```lua
 
 local content = ai_response.content
-content = aip.md.outer_block_content_or_raw(content)
 
-aip.file.save(data.dest_path, content)
+print(aip.tag)
+
+local elem_by_name = aip.tag.extract_as_map(content, {"file_agumented_content", "file_summary_content"})
+
+if elem_by_name.file_agumented_content then
+  aip.file.save(input.dest_path, elem_by_name.file_agumented_content.content, {trim_start = true, single_trailing_newline = true})
+else
+  print("No <file_augmented_content/> tag for " .. input.dest_path)
+end
+
+if elem_by_name.file_summary_content then
+  aip.file.save(input.sum_path, elem_by_name.file_summary_content.content, {trim_start = true, single_trailing_newline = true})
+else
+  print("No <file_summary_content/> tag for " .. input.sum_path)
+end
 
 -- aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
 
@@ -189,14 +210,17 @@ if skipped_count > 0 then
 end
 
 local raw_md_stats   = aip.file.stats(before_all.settings.dir_2_raw_md   .. "/**/*.md")
-local final_md_stats = aip.file.stats(before_all.settings.dir_3_final_md .. "/**/*.md")
+local sum_md_stats = aip.file.stats(before_all.settings.dir_3_sum_md .. "/**/*.md")
+local final_md_stats = aip.file.stats(before_all.settings.dir_4_final_md .. "/**/*.md")
 
 local raw_size_fmt   = aip.text.format_size(raw_md_stats.total_size)
+local sum_size_fmt = aip.text.format_size(sum_md_stats.total_size)
 local final_size_fmt = aip.text.format_size(final_md_stats.total_size)
 
 msg = msg .. "\n"
-msg = msg .. "\n  Raw md files: " .. raw_size_fmt
-msg = msg .. "\nFinal md files: " .. final_size_fmt
+msg = msg .. "\n    Raw md files: " .. raw_size_fmt
+msg = msg .. "\nSummary md files: " .. sum_size_fmt
+msg = msg .. "\n  Final md files: " .. final_size_fmt
 
 aip.run.pin("progress", 0, {label = "Progress:", content = msg})
 

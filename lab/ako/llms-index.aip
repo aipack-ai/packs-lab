@@ -24,14 +24,19 @@ local config = init_res.data
 local settings = p_utils.build_settings(config)
 
 local globs = {
-  settings.dir_3_final_md .. "/**/*.md",
-  "!" .. settings.dir_3_final_md .. "/**/llms.md"
+  settings.dir_3_sum_md .. "/**/*.md",
 }
 
-local files = aip.file.list(globs)
+local files = aip.file.list_load(globs)
 
 local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
+
+local prompt_path = settings.config.llms_prompt
+local custom_prompt = nil
+if prompt_path and aip.path.exists(prompt_path) then
+  custom_prompt = aip.file.load(prompt_path).content
+end
 
 print("Creating llms.md for " .. #files .. " files")
 
@@ -41,7 +46,8 @@ return aip.flow.data_response({
   },
   data = {
     files          = files,
-    dir_3_final_md = settings.dir_3_final_md
+    custom_prompt  = custom_prompt,
+    dir_4_final_md = settings.dir_4_final_md
   }
 })
 
@@ -51,21 +57,25 @@ return aip.flow.data_response({
 
 You are an agent that create `llms.md` in markdown from a list of files and their content. 
 
-Here is the llms.md format/guideline, and the user will give you all of the files.
+A summary of each file will be given, and your goal create single index files with the summary for each
+
+Here is the format of the llms.md (use this format except if the user ask for something different)
 
 ```
-At the moment the most widely and easily understood format for language models is Markdown. Simply showing where key Markdown files can be found is a great first step. Providing some basic structure helps a language model to find where the information it needs can come from.
+# overall_doc_title
 
-The llms.md file is unusual in that it uses Markdown to structure the information rather than a classic structured format such as XML. The reason for this is that we expect many of these files to be read by language models and agents. Having said that, the information in llms.md follows a specific format and can be read using standard programmatic-based tools.
+ONE_PARAGRAPH_SUMMARY
 
-The llms.md file spec is for files located in the root path /llms.md of a website (or, optionally, in a subpath). A file following the spec contains the following sections as markdown, in the specific order:
+## [](file_path_without_the_sum_prefix_dir)
 
-An H1 with the name of the project or site. This is the only required section
-A blockquote with a short summary of the project, containing key information necessary for understanding the rest of the file
-Zero or more markdown sections (e.g. paragraphs, lists, etc) of any type except headings, containing more detailed information about the project and how to interpret the provided files
-Zero or more markdown sections delimited by H2 headers, containing “file lists” of URLs where further detail is available
-Each “file list” is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes about the file.
+FILE_SUMMARY_FIRST_SENTENCE
+
+FILE_SUMMARY_BULLET_POINTS
+
+## ...next file
 ```
+
+So, for each file, we will have a `## [](file_path_without_the_sum_prefix_dir)` section
 
 # Instruction
 
@@ -80,7 +90,17 @@ Here are all of the files we need to build a llms.md for.
 {{/each}}
 
 - Make sure that for each file you add the description of the file. 
-- Make sure the link paths are relative to the root website site (wihtout the leading /, and not including the `{{data.dir_3_final_md}}` prefix)
+- Make sure the link paths are relative to the root website site (wihtout the leading /, and not including the `{{data.dir_3_sum_md}}` prefix)
+
+# Instruction
+
+{{#if data.custom_prompt}}
+
+Here are some important additional instructions on how to process this raw markdown file
+
+{{data.custom_prompt}}
+
+{{/if}}
 
 # Output
 
@@ -93,7 +113,7 @@ end
 -- remove the eventual block content
 local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
-local llms_path = data.dir_3_final_md .. "/llms.md"
+local llms_path = data.dir_4_final_md .. "/llms.md"
 local llms_file = aip.file.save(llms_path, content)
 local llms_size_fmt = aip.text.format_size(llms_file.size, {trim = true})
 local msg =    "✅ " .. llms_path .. " processed (" .. llms_size_fmt .. ")."

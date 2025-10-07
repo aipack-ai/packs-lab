@@ -76,7 +76,8 @@ function build_settings(config)
     dir_0_original  = base_data_dir .. "/0-original",
     dir_1_slim_html = base_data_dir .. "/1-slim-html",
     dir_2_raw_md    = base_data_dir .. "/2-raw-md",
-    dir_3_final_md  = base_data_dir .. "/3-final-md",
+    dir_3_sum_md    = base_data_dir .. "/3-sum-md",
+    dir_4_final_md  = base_data_dir .. "/4-final-md",
   }
 
   return settings

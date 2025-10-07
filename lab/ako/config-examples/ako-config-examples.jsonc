@@ -28,15 +28,16 @@
 // {
 //           "out_dir": "out/ako",
 // // -- Fetch
-//     "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//          "base_url": "https://www.alchemy.com/",
-//        "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
-//       "filter_path": "/docs",
-//         "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
-//     "exclude_globs": ["**/{debug,llms,changelog}*"],
+//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//           "base_url": "https://www.alchemy.com/",
+//         "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
+//        "filter_path": "/docs",
+//          "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
+//      "exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Augment
-//     "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
-//       "concurrency": 6,
+//      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
+//        "concurrency": 6,
+//     "augment_prompt": "./my-augment-instruction.md", // Ignored if not found
 // // -- llms index
 //           "do_llms": true,
 //        "llms_model": "gemini-flash-latest"

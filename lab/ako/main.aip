@@ -61,14 +61,16 @@ if init_res.type == "config" then
     num_of_files         = raw_stats.number_of_files -- this way allows to just use the agument 
     orig_html_total_size = orig_stats.total_size
     raw_md_total_size    = raw_stats.total_size
-    slim_msg = slim_msg .. "(skipped) "
+    slim_msg = "■■ SKIP ➜ " .. slim_msg
+  else 
+    slim_msg = "✅ DONE ➜ " .. slim_msg
   end
   
   
   slim_msg = slim_msg .. num_of_files .. " pages processed."
   slim_msg = slim_msg .. " " .. aip.text.format_size(orig_html_total_size, {trim = true})
   slim_msg = slim_msg .. " ➜ " .. aip.text.format_size(raw_md_total_size, {trim = true})
-  aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "✅ DONE - " .. slim_msg})
+  aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = slim_msg})
 
   if num_of_files == 0 then
     -- ✖
@@ -78,16 +80,22 @@ if init_res.type == "config" then
   end
   
   -- == Run Augment
-  aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = "▶ Running"})
+  local augment_msg = nil
 
-  local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
-  local agument_msg = "✅ DONE - " .. augment_data.processed_count .. " AI Augmented"
-  if augment_data.skipped_count > 0 then
-      agument_msg = agument_msg .. " - " .. augment_data.skipped_count .. " already processed."
+  if config.do_augment == nill or config.do_augment == true then 
+    aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = "▶ Running"})
+
+    local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
+    augment_msg = "✅ DONE ➜ " .. augment_data.processed_count .. " AI Augmented"
+    if augment_data.skipped_count > 0 then
+        augment_msg = augment_msg .. " - " .. augment_data.skipped_count .. " already processed."
+    end
+    augment_msg = augment_msg .. " " .. aip.text.trim(augment_data.raw_size_fmt) .. " ➜ " .. aip.text.trim(augment_data.final_size_fmt)
+  else
+    augment_msg = "■■ SKIP ➜ " .. "(do_augment = false)"
   end
-  agument_msg = agument_msg .. " " .. aip.text.trim(augment_data.raw_size_fmt) .. " ➜ " .. aip.text.trim(augment_data.final_size_fmt)
 
-  aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = agument_msg })
+  aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = augment_msg })
 
   -- == Run llms
   if settings.config.do_llms == nil or settings.config.do_llms == true then 
@@ -98,11 +106,14 @@ if init_res.type == "config" then
      local llms_msg = "✅ DONE ➜ " .. llms_data.llms_path .. " (" .. llms_size_fmt .. ")"
      
      aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
+  else
+     local llms_msg = "■■ SKIP ➜ " .. "(do_llms = false or no files to llms)"
+     aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
   end
 
   -- == Pin final
   local original_size_fmt = aip.text.format_size(orig_html_total_size, "MB")
-  local final_size = aip.file.stats(settings.dir_3_final_md .. "/**/*.*").total_size
+  local final_size = aip.file.stats(settings.dir_4_final_md .. "/**/*.*").total_size
   local final_size_fmt = aip.text.format_size(final_size, "MB")
   if final_size < 1000000 then
     local full_size_fmt = aip.text.format_size(final_size, { trim = true})
