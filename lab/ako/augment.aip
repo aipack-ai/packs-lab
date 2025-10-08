@@ -165,8 +165,6 @@ Here are some important additional instructions on how to process this raw markd
 
 local content = ai_response.content
 
-print(aip.tag)
-
 local elem_by_name = aip.tag.extract_as_map(content, {"file_agumented_content", "file_summary_content"})
 
 if elem_by_name.file_agumented_content then
