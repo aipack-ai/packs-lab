@@ -66,16 +66,23 @@ Here is the format of the llms.md (use this format except if the user ask for so
 
 ONE_PARAGRAPH_SUMMARY
 
-## [](file_path_without_the_sum_prefix_dir)
+## file_path_without_the_sum_prefix_dir
 
-FILE_SUMMARY_FIRST_SENTENCE
-
-FILE_SUMMARY_BULLET_POINTS
+FILE_CONCISE_SUMMARY
 
 ## ...next file
 ```
 
-So, for each file, we will have a `## [](file_path_without_the_sum_prefix_dir)` section
+So, for each file, we will have a `## file_path_without_the_sum_prefix_dir` section, with the `{{data.dir_3_sum_md}}` prefix.
+
+The `FILE_CONCISE_SUMMARY` is a very concise summary of the file, condensed into 1 to 3 concise sentences that focus solely on describing its essence.
+
+No need to preface the paragraph with "This document..."; simply state directly what this file is about. For example
+
+- Do not start with "This document provides an overview of ..."
+- But just with "Overview of ..."
+
+It is already clear which file this section pertains to.
 
 # Instruction
 
