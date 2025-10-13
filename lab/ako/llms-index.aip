@@ -127,7 +127,7 @@ local msg =    "✅ " .. llms_path .. " processed (" .. llms_size_fmt .. ")."
 aip.run.pin("status", {label = "DONE:", content = msg})
 
 return {
-  _display      = "➜ " .. llms_path,
+  _display      = "LLM Index File (" .. llms_size_fmt .. ")" .. "\n➜ " .. llms_path,
   llms_path     = llms_path,
   llms_size     = llms_file.size
 }

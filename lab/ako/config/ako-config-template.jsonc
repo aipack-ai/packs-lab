@@ -17,7 +17,8 @@
 //          "max_pages": 10,
 // // -- Augment
 //         "do_augment": true,
-//      "augment_model": "lite",
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
+//      "augment_model": "gemini-flash-latest",
 //        "concurrency": 6,
 //     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
@@ -38,6 +39,7 @@
 //      "exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Augment
 //         "do_augment": true,
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //        "concurrency": 6,
 //     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)	
@@ -58,6 +60,7 @@
 //      "exclude_globs": ["**/{debug,llms}*"],
 // // -- Augment
 //         "do_augment": true,
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //        "concurrency": 16,
 //     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
@@ -79,6 +82,7 @@
 //          "max_pages": 10,
 // // -- Augment
 //         "do_augment": true,
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest",
 //        "concurrency": 6,
 //     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
@@ -100,6 +104,7 @@
 //      "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
 // // -- Augment
 //         "do_augment": true,
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //        "concurrency": 6,
 //     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)

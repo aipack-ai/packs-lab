@@ -11,7 +11,7 @@ function init_config(input)
 
   -- == If the config does not exist, create it, and prompt user
   if not aip.path.exists(config_path) then
-    local xp_config_path = CTX.AGENT_FILE_DIR .. "/config-examples/ako-config-examples.jsonc"
+    local xp_config_path = CTX.AGENT_FILE_DIR .. "/config/ako-config-template.jsonc"
     local config_content = aip.file.load(xp_config_path).content
     aip.file.save("ako-config.jsonc", config_content)
 

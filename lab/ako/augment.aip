@@ -51,11 +51,16 @@ for  i, file in ipairs(files) do
     local dest_path  = settings.dir_4_final_md .. "/" .. rel_path
 
     if not aip.path.exists(dest_path) then
+        local size_fmt = aip.text.format_size(file.size, {trim = true})
+
+        local disp  = "Raw Markdown File (" .. size_fmt .. ")"
+        disp = disp .. "\n➜ " .. raw_md_file.path 
         local input = {
-          _display    = raw_md_file.path,
-          raw_md_file = raw_md_file,
-          sum_path    = sum_path,
-          dest_path   = dest_path,
+          _display     = disp,
+          max_size_kb  = settings.config.max_size_kb,
+          raw_md_file  = raw_md_file,
+          sum_path     = sum_path,
+          dest_path    = dest_path,
         }
         table.insert(inputs,input)
     else
@@ -91,6 +96,7 @@ end
 
 local raw_md_file = input.raw_md_file
 local dest_path   = input.dest_path
+local max_size_kb = input.max_size_kb
 
 -- if the dest path already exist, we skip
 if aip.path.exists(dest_path) then
@@ -98,6 +104,12 @@ if aip.path.exists(dest_path) then
 end
 
 raw_md_file = aip.file.load(raw_md_file.path)
+
+if input.max_size_kb and raw_md_file.size > (max_size_kb * 1000) then
+  local msg = "File too big (i.e. >100 KB): " .. aip.text.format_size(raw_md_file.size, {trim = true})
+  msg = msg .. "\nFile: " .. raw_md_file.path
+  return aip.flow.skip(msg)
+end
 
 local prompt_path = before_all.settings.config.augment_prompt
 local custom_prompt = nil
@@ -140,7 +152,7 @@ Here is the raw content
 {{data.raw_md_file.content}}
 ````
 
-Return the full file agumented content under a <file_agumented_content>NEW_FILE_CONTENT</file_agumented_content>
+Return the full file agumented content under a <file_augmented_content>NEW_FILE_CONTENT</file_augmented_content>
 
 And the file summary under <file_summary_content>FILE_SUMMARY_CONTENT</file_summary_content>
 
@@ -165,23 +177,41 @@ Here are some important additional instructions on how to process this raw markd
 
 local content = ai_response.content
 
-local elem_by_name = aip.tag.extract_as_map(content, {"file_agumented_content", "file_summary_content"})
+local elem_by_name = aip.tag.extract_as_map(content, {"file_augmented_content", "file_summary_content"})
 
-if elem_by_name.file_agumented_content then
-  aip.file.save(input.dest_path, elem_by_name.file_agumented_content.content, {trim_start = true, single_trailing_newline = true})
+
+local aug_file = nil
+if elem_by_name.file_augmented_content then
+  aug_file = aip.file.save(input.dest_path, elem_by_name.file_augmented_content.content, {trim_start = true, single_trailing_newline = true})
 else
   print("No <file_augmented_content/> tag for " .. input.dest_path)
 end
 
+local sum_file = nil
 if elem_by_name.file_summary_content then
-  aip.file.save(input.sum_path, elem_by_name.file_summary_content.content, {trim_start = true, single_trailing_newline = true})
+  sum_file = aip.file.save(input.sum_path, elem_by_name.file_summary_content.content, {trim_start = true, single_trailing_newline = true})
 else
   print("No <file_summary_content/> tag for " .. input.sum_path)
 end
 
 -- aip.run.pin("progress", 0, {label = "Progress:", content = "✔ " .. data.dest_path})
+-- "" .. data.dest_path
 
-return "" .. data.dest_path
+local display = ""
+if aug_file then
+  local size_fmt = aip.text.format_size(aug_file.size, {trim = true})
+  display = display .. "Augmented File (" .. size_fmt .. ")\n➜ " .. input.dest_path
+end
+
+if sum_file then
+  local size_fmt = aip.text.format_size(sum_file.size, {trim = true})
+  display = display .. "\n\nSummary File (" .. size_fmt .. ")\n➜ " .. input.sum_path
+end
+
+
+return {
+    _display = display
+}
 ```
 
 # After All 
