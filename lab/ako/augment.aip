@@ -152,9 +152,17 @@ Here is the raw content
 {{data.raw_md_file.content}}
 ````
 
-Return the full file agumented content under a <file_augmented_content>NEW_FILE_CONTENT</file_augmented_content>
+Return the full file agumented content under a `file_augmented_content` like:
 
-And the file summary under <file_summary_content>FILE_SUMMARY_CONTENT</file_summary_content>
+<file_augmented_content>
+NEW_FILE_CONTENT
+</file_augmented_content>
+
+And the file summary under a `file_summary_content` like:
+
+<file_summary_content>
+FILE_SUMMARY_CONTENT
+</file_summary_content>
 
 The FILE_SUMMARY_CONTENT should one concise sentence, empty line, and then 3 concise bullet points maximum.
 
@@ -222,7 +230,7 @@ local processed_count = 0
 for i, o in ipairs(outputs) do
   -- Doing type check for AIPACK 0.7.17 since it is LigthUserData if skipped
   -- Future version will be "false"
-  if type(o) == "string" then
+  if type(o) == "table" then
     processed_count = processed_count + 1
   end
 end
@@ -234,7 +242,7 @@ if processed_count == 0 and input_len ==1  then
   skipped_count = before_all.total_files
 end
 if skipped_count > 0 then
-    msg = msg .. " - " .. skipped_count .. " already processed."
+    msg = msg .. " - " .. skipped_count .. " skipped (see below)"
 end
 
 local raw_md_stats   = aip.file.stats(before_all.settings.dir_2_raw_md   .. "/**/*.md")

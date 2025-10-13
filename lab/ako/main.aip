@@ -58,7 +58,7 @@ if init_res.type == "config" then
   if num_of_files == nil or num_of_files == 0 then
     local orig_stats     = aip.file.stats(settings.dir_0_original .. "/**/*")
     local raw_stats      = aip.file.stats(settings.dir_2_raw_md .. "/**/*")
-    num_of_files         = raw_stats.number_of_files -- this way allows to just use the agument 
+    num_of_files         = raw_stats.number_of_files -- this way allows to just use the augment 
     orig_html_total_size = orig_stats.total_size
     raw_md_total_size    = raw_stats.total_size
     slim_msg = "■■ SKIP ➜ " .. slim_msg
@@ -87,8 +87,11 @@ if init_res.type == "config" then
 
     local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
     augment_msg = "✅ DONE ➜ " .. augment_data.processed_count .. " AI Augmented"
-    if augment_data.skipped_count > 0 then
-        augment_msg = augment_msg .. " - " .. augment_data.skipped_count .. " already processed."
+    if num_of_files then
+        local already_processed_count = num_of_files - augment_data.processed_count - (augment_data.skipped_count or 0)
+        if already_processed_count > 0 then 
+            augment_msg = augment_msg .. " - " .. already_processed_count .. " already processed."
+        end
     end
     augment_msg = augment_msg .. " " .. aip.text.trim(augment_data.raw_size_fmt) .. " ➜ " .. aip.text.trim(augment_data.final_size_fmt)
   else
