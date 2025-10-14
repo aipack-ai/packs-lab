@@ -1,5 +1,9 @@
 local CONFIG_PATH  = "./ako-config.jsonc"
 
+function config_edit_msg(config_path)
+  return "Edit the prompt file:\n\n➜ " .. config_path .. "\n\n(Activate or customize the section you want to run and press 'r')"
+end
+
 -- Init or check that the config is present
 -- `input` can be the path of a json file with the config
 --         or the default will be `./ako-config.jsonc`
@@ -15,7 +19,7 @@ function init_config(input)
     local config_content = aip.file.load(xp_config_path).content
     aip.file.save("ako-config.jsonc", config_content)
 
-    msg = "Edit './ako-config.jsonc' file to activate or customize the section you want to run"
+    msg = config_edit_msg("./ako-config.jsonc")
 
     return {
       type = "message",
@@ -28,7 +32,7 @@ function init_config(input)
 
   -- == If config empty, prompt user to edit it 
   if config == nil then
-      msg = "Edit the '" .. config_path .. "' to activate a section, and press [r] to replay"
+      msg = config_edit_msg(config_path)
       return {
         type = "message",
         data = msg
