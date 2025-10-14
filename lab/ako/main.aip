@@ -4,10 +4,10 @@
 local p_utils = require("prompt_utils")
 
 -- 
-local LABEL_FETCH_SLIM = "Fetch & Slim Agent:"
-local LABEL_AUGMENT    = "     Augment Agent:"
-local LABEL_LLMS       = "  llms Index Agent:"
-local LABEL_SUMMARY    = "           Summary:"
+local LABEL_FETCH_SLIM = "   Fetch & Slim Agent:"
+local LABEL_AUGMENT    = "Clean & Augment Agent:"
+local LABEL_LLMS       = "     llms Index Agent:"
+local LABEL_SUMMARY    = "              Summary:"
 
 -- If return a string, means not valid, and it's the message
 local valid = p_utils.validate_aip_version()
@@ -85,7 +85,7 @@ if init_res.type == "config" then
   if config.do_augment == nill or config.do_augment == true then 
     aip.run.pin("augm", 1, { label = LABEL_AUGMENT, content = "▶ Running"})
 
-    local augment_data = aip.agent.run("augment", {inputs = { config.config_path } }).after_all
+    local augment_data = aip.agent.run("clean-augment", {inputs = { config.config_path } }).after_all
     augment_msg = "✅ DONE ➜ " .. augment_data.processed_count .. " AI Augmented"
     if num_of_files then
         local already_processed_count = num_of_files - augment_data.processed_count - (augment_data.skipped_count or 0)
