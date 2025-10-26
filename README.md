@@ -1,11 +1,11 @@
-# AIPACK Lab
+# AI Packs for the `lab@` AIPack namespace
 
-Here is a list of AIPACK lab packs that can be run from this repo.
+Here is a list of AIPack lab packs that can be run from this repo.
 
 You have two ways to learn these lab packs/examples.
 
 Both require:
-- AIPACK installed (see https://aipack.ai)
+- AIPack installed (see https://aipack.ai)
 - API keys set in the terminal
 
 ## 1) Install and run the pack
