@@ -1,0 +1,80 @@
+# Before All
+
+```lua
+
+local default_prompt_absolute_dir  = CTX.WORKSPACE_AIPACK_DIR .. "/.prompt/" .. CTX.PACK_IDENTITY
+local default_prompt_file_path     = default_prompt_absolute_dir .. "/polychat-prompt.md"
+
+local prompt_file_path = default_prompt_file_path
+
+local prompt_file = nil
+
+if aip.path.exists(prompt_file_path) then
+    prompt_file = aip.file.load(prompt_file_path)
+else
+    local template_file  = aip.file.load(CTX.AGENT_FILE_DIR .. "/template/prompt.md")
+    aip.file.save(prompt_file_path, template_file.content)
+    prompt_file = aip.file.load(prompt_file_path)
+end
+
+local meta, prompt_min_meta = aip.md.extract_meta(prompt_file.content)
+
+local user_prompt = aip.text.trim(prompt_min_meta)
+
+local models = meta.models 
+
+local first_part, second_part = aip.text.split_first_line(prompt_min_meta, "====")
+
+local inputs = {}
+
+for _, model in ipairs(models) do
+    local disp_prompt = aip.text.truncate(user_prompt, 64, "...")
+    local input = {
+        _display = model .. ": \n" .. disp_prompt,
+        model = model
+    }
+    table.insert(inputs, input)
+end
+
+
+return aip.flow.before_all_response({
+    inputs = inputs,
+    options = {
+        input_concurrency = #inputs
+    }, 
+    before_all = {
+        user_prompt = user_prompt
+    }
+})
+```
+
+# Data
+
+```lua
+local model       = input.model 
+local user_prompt = before_all.user_prompt
+
+if model == nil then
+    return aip.flow.skip("No model configured, so skipping")
+end
+
+if user_prompt == "" then 
+  return aip.flow.skip("No user prompt, so skipping")
+end
+
+aip.task.set_label(model)
+
+return aip.flow.data_response({
+    options = {
+        model = model,
+    }, 
+    data = {
+        user_prompt = user_prompt
+    }
+})
+```
+
+# Instruction
+
+{{data.user_prompt}}
+
