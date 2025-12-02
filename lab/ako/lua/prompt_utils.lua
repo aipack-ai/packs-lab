@@ -17,9 +17,9 @@ function init_config(input)
   if not aip.path.exists(config_path) then
     local xp_config_path = CTX.AGENT_FILE_DIR .. "/config/ako-config-template.jsonc"
     local config_content = aip.file.load(xp_config_path).content
-    aip.file.save("ako-config.jsonc", config_content)
+    aip.file.save(CONFIG_PATH, config_content)
 
-    msg = config_edit_msg("./ako-config.jsonc")
+    msg = config_edit_msg(CONFIG_PATH)
 
     return {
       type = "message",
