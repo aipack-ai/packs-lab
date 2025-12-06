@@ -24,7 +24,7 @@ local FIRST_PAGE     = config.first_page
 -- local FILTER_PATH    = CONFIG.filter_path
 -- local MAX_PAGES      = CONFIG.max_pages
 
-local has_exclude_globs  = config.exclude_globs and next(config.exclude_globs) ~= nil 
+local has_exclude_globs  = config.fetch_exclude_globs and next(config.fetch_exclude_globs) ~= nil 
 
 local fetch_ctx = {
   has_exclude_globs = has_exclude_globs, -- probably need to be in config

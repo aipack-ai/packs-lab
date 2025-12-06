@@ -54,7 +54,7 @@
 //           "base_url": "https://www.alchemy.com/docs/",
 //         "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //          "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
-//      "exclude_globs": ["**/{debug,llms,changelog}*"],
+// "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //         "do_augment": true,
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
@@ -75,7 +75,7 @@
 //           "base_dir": "path/to/dir/",
 //              "globs": "**/*.html",
 //          "max_pages": 10,
-//      "exclude_globs": ["**/{debug,llms}*"],
+// "fetch_exclude_globs": ["**/{debug,llms}*"],
 // // -- Clean & Augment
 //         "do_augment": true,
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
@@ -117,7 +117,7 @@
 //           "base_url": "https://docs.imfusion.com/cppsdk/",
 //         "first_page": "https://docs.imfusion.com/cppsdk/index.html",
 //          "max_pages": 10,
-//      "exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
+// "fetch_exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
 // // -- Clean & Augment
 //         "do_augment": true,
 //        "max_size_kb": 200, // in KB, above which the file will be skipped

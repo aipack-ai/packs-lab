@@ -48,7 +48,7 @@ function process_links(links, page_urls_map, current_page_url, fetch_ctx)
   local max_pages         = fetch_ctx.settings.config.max_pages
   local base_url          = fetch_ctx.settings.config.base_url
   local filter_path       = fetch_ctx.settings.config.filter_path or "/"
-  local exclude_globs     = fetch_ctx.settings.config.exclude_globs or {}
+  local fetch_exclude_globs = fetch_ctx.settings.config.fetch_exclude_globs or {}
   local has_exclude_globs = fetch_ctx.has_exclude_globs
 
   local links_queue = {}
@@ -71,8 +71,8 @@ function process_links(links, page_urls_map, current_page_url, fetch_ctx)
         
         -- if not in exclude (make sure to test pass so that we do not double print)
         if pass and has_exclude_globs then
-          if aip.path.matches_glob(url_path, exclude_globs) then 
-            print("Exclude glob path (from exclude_globs) " .. url_path)
+          if aip.path.matches_glob(url_path, fetch_exclude_globs) then 
+            print("Exclude glob path (from fetch_exclude_globs) " .. url_path)
             page_urls_map[page_url] = true
             pass = false
           end
