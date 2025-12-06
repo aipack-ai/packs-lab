@@ -13,7 +13,6 @@
 //      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //           "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
 //         "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
-//        "filter_path": "/lopdf/0.38.0/lopdf/",
 //          "max_pages": 10,
 // // -- Clean & Augment
 //         "do_augment": true,
@@ -32,9 +31,8 @@
 //           "out_dir": "out/ako",
 // // -- Fetch & Slim
 //      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://cookbook.openai.com/",
-//         "first_page": "https://cookbook.openai.com/",
-//        "filter_path": "/examples/",
+//           "base_url": "https://cookbook.openai.com/examples/",
+//         "first_page": "https://cookbook.openai.com/examples/",
 //          "max_pages": 10,
 // // -- Clean & Augment
 //         "do_augment": true,
@@ -53,9 +51,8 @@
 //           "out_dir": "out/ako",
 // // -- Fetch & Slim
 //      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://www.alchemy.com/",
+//           "base_url": "https://www.alchemy.com/docs/",
 //         "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
-//        "filter_path": "/docs",
 //          "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
 //      "exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment

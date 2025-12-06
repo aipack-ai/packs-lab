@@ -29,6 +29,12 @@ local globs = {
 
 local files = aip.file.list_load(globs)
 
+-- Normalize paths to be relative to the content root (dir_3_sum_md)
+local root_dir = settings.dir_3_sum_md
+for i, file in ipairs(files) do
+    file.rel_path = aip.path.diff(file.path, root_dir)
+end
+
 local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
 
@@ -73,7 +79,7 @@ FILE_CONCISE_SUMMARY
 ## ...next file
 ```
 
-So, for each file, we will have a `## file_path_without_the_sum_prefix_dir` section, with the `{{data.dir_3_sum_md}}` prefix.
+So, for each file, we will have a `## file_path_without_the_sum_prefix_dir` section. The path provided is already relative to the generated documentation root.
 
 The `FILE_CONCISE_SUMMARY` is a very concise summary of the file, condensed into 1 to 3 concise sentences that focus solely on describing its essence.
 
@@ -89,7 +95,7 @@ It is already clear which file this section pertains to.
 Here are all of the files we need to build a llms.md for. 
 
 {{#each data.files}}
-{{this.path}}
+{{this.rel_path}}
 ```{{this.ext}}
 {{this.content}}
 ```
@@ -97,7 +103,7 @@ Here are all of the files we need to build a llms.md for.
 {{/each}}
 
 - Make sure that for each file you add the description of the file. 
-- Make sure the link paths are relative to the root website site (wihtout the leading /, and not including the `{{data.dir_3_sum_md}}` prefix)
+- Make sure the link paths are relative to the root website site (without the leading /)
 
 # Instruction
 
