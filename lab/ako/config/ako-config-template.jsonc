@@ -16,6 +16,7 @@
 //          "max_pages": 10,
 // // -- Clean & Augment
 //         "do_augment": true,
+//  "aug_exclude_globs": ["*index*"],
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest",
 //        "concurrency": 6,
@@ -36,6 +37,7 @@
 //          "max_pages": 10,
 // // -- Clean & Augment
 //         "do_augment": true,
+//  "aug_exclude_globs": ["*index*"],
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest",
 //        "concurrency": 6,
@@ -57,6 +59,7 @@
 // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //         "do_augment": true,
+//  "aug_exclude_globs": ["*index*"]
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //        "concurrency": 6,
@@ -78,6 +81,7 @@
 // "fetch_exclude_globs": ["**/{debug,llms}*"],
 // // -- Clean & Augment
 //         "do_augment": true,
+//  "aug_exclude_globs": ["*index*"],
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
 //        "concurrency": 16,
@@ -99,6 +103,7 @@
 //          "max_pages": 10,
 // // -- Clean & Augment
 //         "do_augment": true,
+//  "aug_exclude_globs": ["*index*"],
 //        "max_size_kb": 200, // in KB, above which the file will be skipped
 //      "augment_model": "gemini-flash-latest",
 //        "concurrency": 6,

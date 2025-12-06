@@ -39,6 +39,9 @@ local files = aip.file.list(settings.dir_2_raw_md  .. "/**/*.md")
 local already_processed_count = 0
 local inputs = {}
 
+local aug_exclude_globs = settings.config.aug_exclude_globs or {}
+local has_exclude_globs = #aug_exclude_globs > 0
+
 for  i, file in ipairs(files) do
     if #inputs >= max_pages then
       break
@@ -49,6 +52,12 @@ for  i, file in ipairs(files) do
     local rel_path   = aip.path.diff(raw_md_file.path, settings.dir_2_raw_md)
     local sum_path   = settings.dir_3_sum_md .. "/" .. rel_path
     local dest_path  = settings.dir_4_final_md .. "/" .. rel_path
+
+    if has_exclude_globs and aip.path.matches_glob(rel_path, aug_exclude_globs) then
+        print("Exclude glob path (from aug_exclude_globs) " .. rel_path)
+        already_processed_count = already_processed_count + 1
+        goto continue
+    end
 
     if not aip.path.exists(dest_path) then
         local size_fmt = aip.text.format_size(file.size, {trim = true})
