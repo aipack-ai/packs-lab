@@ -6,6 +6,27 @@
 // - Recommendation: Start with a relatively low max_pages number, like 10, and then
 //                   increase it when you have achieved the desired result on the small subset.
 
+//// Rust library
+// {
+//           "out_dir": "out/ako",
+// // -- Fetch & Slim
+//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//           "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
+//         "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
+//        "filter_path": "/lopdf/0.38.0/lopdf/",
+//          "max_pages": 10,
+// // -- Clean & Augment
+//         "do_augment": true,
+//        "max_size_kb": 200, // in KB, above which the file will be skipped
+//      "augment_model": "gemini-flash-latest",
+//        "concurrency": 6,
+//     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
+// // -- llms index
+//            "do_llms": true,
+//         "llms_model": "gemini-flash-latest",
+//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+// }
+
 //// OpenAI Cookbook
 // {
 //           "out_dir": "out/ako",
