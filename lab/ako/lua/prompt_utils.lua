@@ -60,10 +60,22 @@ function build_settings(config)
 
   local src_type = nil -- "web" | "dir"
   local base_data_dir = nil
+  local base_url_path_prefix = nil
+  
   if config.base_url then
     local url_obj   = aip.web.parse_url(config.base_url)
     base_data_dir = config.out_dir .. "/" .. url_obj.host
     src_type = "web"
+    
+    -- Extract path part from base_url to be used as a prefix to strip off from fetched URLs' paths
+    base_url_path_prefix = url_obj.path or "/"
+
+    -- Ensure base_url_path_prefix ends with a slash if it's not just "/"
+    -- This helps in stripping the prefix cleanly from full URL paths.
+    if base_url_path_prefix ~= "/" and not base_url_path_prefix:match("/$") then
+      base_url_path_prefix = base_url_path_prefix .. "/"
+    end
+
   elseif config.base_dir then
     src_type = "file"
     local base_dir_obj = aip.path.parse(config.base_dir)
@@ -77,6 +89,7 @@ function build_settings(config)
     config          = config,
 
     base_data_dir   = base_data_dir,
+    base_url_path_prefix = base_url_path_prefix, -- nil for src_type="file"
     dir_0_original  = base_data_dir .. "/0-original",
     dir_1_slim_html = base_data_dir .. "/1-slim-html",
     dir_2_raw_md    = base_data_dir .. "/2-raw-md",

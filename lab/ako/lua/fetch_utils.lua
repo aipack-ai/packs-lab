@@ -1,3 +1,26 @@
+-- Gets the path relative to the base URL path prefix.
+function get_local_path_from_url_path(url_path, fetch_ctx)
+  local prefix = fetch_ctx.settings.base_url_path_prefix
+  local local_path = url_path
+  
+  if fetch_ctx.settings.src_type == "web" and prefix and local_path:sub(1, #prefix) == prefix then
+    local_path = local_path:sub(#prefix + 1)
+  end
+  
+  -- local_path might be empty if url_path was equal to prefix (i.e., it's the root/first page)
+  if local_path == "" then
+    local_path = "index.html"
+  end
+  
+  -- Remove leading slash if present (aip.path.parse works better with paths relative to its input)
+  if local_path:sub(1,1) == "/" then
+    local_path = local_path:sub(2)
+  end
+  
+  return local_path
+end
+
+
 -- fectch_ctx: {page_counter, total_orig_size, total_slim_size, total_md_raw_size}
 function process_url(url_str, fetch_ctx)
   local settings  = fetch_ctx.settings
@@ -11,8 +34,10 @@ function process_url(url_str, fetch_ctx)
 
   local html_res     = aip.web.get(url)
   local html_content = html_res.content
+  
+  local local_path = get_local_path_from_url_path(url_obj.path, fetch_ctx)
 
-  local res = process_content(url_obj.path, html_content, fetch_ctx)
+  local res = process_content(local_path, html_content, fetch_ctx)
 
   return res
 
