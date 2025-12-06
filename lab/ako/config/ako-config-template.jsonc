@@ -8,131 +8,134 @@
 
 //// Rust library
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
-//         "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
-//          "max_pages": 10,
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
+//             "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
+//              "max_pages": 10,
+// // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//  "aug_exclude_globs": ["*index*"],
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest",
-//        "concurrency": 6,
-//     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
+//             "do_augment": true,
+//      "aug_exclude_globs": ["*index*"],
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest",
+//            "concurrency": 6,
+//         "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// OpenAI Cookbook
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://cookbook.openai.com/examples/",
-//         "first_page": "https://cookbook.openai.com/examples/",
-//          "max_pages": 10,
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_url": "https://cookbook.openai.com/examples/",
+//             "first_page": "https://cookbook.openai.com/examples/",
+//              "max_pages": 10,
+// // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//  "aug_exclude_globs": ["*index*"],
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest",
-//        "concurrency": 6,
-//     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
+//             "do_augment": true,
+//      "aug_exclude_globs": ["*index*"],
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest",
+//            "concurrency": 6,
+//         "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// Alchemy (blockchain)
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://www.alchemy.com/docs/",
-//         "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
-//          "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
-// "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_url": "https://www.alchemy.com/docs/",
+//             "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
+//              "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
+//    "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//  "aug_exclude_globs": ["*index*"]
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
-//        "concurrency": 6,
-//     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)	
+//             "do_augment": true,
+//      "aug_exclude_globs": ["*index*"],
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
+//            "concurrency": 6,
+//         "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)	
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// Local Files
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_dir": "path/to/dir/",
-//              "globs": "**/*.html",
-//          "max_pages": 10,
-// "fetch_exclude_globs": ["**/{debug,llms}*"],
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_dir": "path/to/dir/",
+//                  "globs": "**/*.html",
+//              "max_pages": 10,
+//    "fetch_exclude_globs": ["**/{debug,llms}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//  "aug_exclude_globs": ["*index*"],
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
-//        "concurrency": 16,
-//     "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
+//             "do_augment": true,
+//      "aug_exclude_globs": ["*index*"],
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
+//            "concurrency": 16,
+//         "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 
 //// Tauri Web Site 
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://tauri.app/reference/",
-//         "first_page": "https://tauri.app/reference/acl/capability/",
-//          "max_pages": 10,
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_url": "https://tauri.app/reference/",
+//             "first_page": "https://tauri.app/reference/acl/capability/",
+//              "max_pages": 10,
+// // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//  "aug_exclude_globs": ["*index*"],
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest",
-//        "concurrency": 6,
-//     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
+//             "do_augment": true,
+//      "aug_exclude_globs": ["*index*"],
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest",
+//            "concurrency": 6,
+//         "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// IMFusion (C++ SDK, medical imaging)
 // {
-//           "out_dir": "out/ako",
+//                "out_dir": "out/ako",
 // // -- Fetch & Slim
-//      "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
-//           "base_url": "https://docs.imfusion.com/cppsdk/",
-//         "first_page": "https://docs.imfusion.com/cppsdk/index.html",
-//          "max_pages": 10,
-// "fetch_exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
+//          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
+//               "base_url": "https://docs.imfusion.com/cppsdk/",
+//             "first_page": "https://docs.imfusion.com/cppsdk/index.html",
+//              "max_pages": 10,
+//    "fetch_exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
 // // -- Clean & Augment
-//         "do_augment": true,
-//        "max_size_kb": 200, // in KB, above which the file will be skipped
-//      "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
-//        "concurrency": 6,
-//     "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
+//             "do_augment": true,
+//            "max_size_kb": 200, // in KB, above which the file will be skipped
+//          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
+//            "concurrency": 6,
+//         "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
 // // -- llms index
-//            "do_llms": true,
-//         "llms_model": "gemini-flash-latest",
-//        "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//                "do_llms": true,
+//             "llms_model": "gemini-flash-latest",
+//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 
