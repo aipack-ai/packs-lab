@@ -1,0 +1,133 @@
+# Data
+
+```lua
+local p_utils = require("prompt_utils")
+
+-- If return a string, means not valid, and it's the message
+local valid = p_utils.validate_aip_version()
+if type(valid) == "string" then
+  return aip.flow.skip(valid)
+end
+
+-- input is nil or the config_path
+local init_res = p_utils.init_config(input)
+
+if init_res.type == "message" then
+  print(init_res.data)
+  return
+end
+
+-- Assuming type = "config"
+local config = init_res.data
+
+local settings = p_utils.build_settings(config)
+
+local globs = {
+  settings.dir_4_final_md .. "/**/*.md",
+}
+
+local files = aip.file.list_load(globs)
+
+-- Normalize paths to be relative to the content root (dir_4_final_md)
+local root_dir = settings.dir_4_final_md
+for i, file in ipairs(files) do
+    file.rel_path = aip.path.diff(file.path, root_dir)
+end
+
+local msg = "Processing doc-for-llm.md for ➜ " .. #files .. " files"
+aip.run.pin("status", {label = "Starting:", content = msg})
+
+local prompt_path = settings.config.docaify_prompt
+local custom_prompt = nil
+if prompt_path and aip.path.exists(prompt_path) then
+  custom_prompt = aip.file.load(prompt_path).content
+end
+
+print("Creating doc-for-llm.md from " .. #files .. " files")
+
+return aip.flow.data_response({
+  options = {
+    model = config.docaify_model or config.llms_model
+  },
+  data = {
+    final_files     = files,
+    custom_prompt   = custom_prompt,
+    dir_5_docaify   = settings.dir_5_docaify
+  }
+})
+
+```
+
+# System
+
+You are an expert technical documentation consolidator. Your goal is to take multiple documentation files and create a single, comprehensive, concise API reference document optimized for LLM/Agent consumption.
+
+Guidelines:
+- Create a very concise, dry, but complete API documentation
+- Use TypeScript type definitions to express types and function signatures
+- Remove redundant explanations and verbose descriptions
+- Focus on API signatures, parameters, return types, and essential usage notes
+- Organize content logically by module/feature
+- Preserve all essential information needed to use the APIs
+- Remove navigation elements, duplicate content, and filler text
+
+# Instruction
+
+Here are all of the doc files to consolidate to one doc file for LLM and agent. 
+
+{{#each data.final_files}}
+<FILE_CONTENT file_path="{{this.rel_path}}">
+{{this.content}}
+</FILE_CONTENT>
+
+{{/each}}
+
+With all of this content, create a very concise, dry, but complete API documentation that will have all of the necessary information for a LLM/Agent to be able to use the APIs. Use TypeScript type definitions to express types and signatures.
+
+Structure the output as a single markdown document with clear sections.
+
+# Instruction
+
+{{#if data.custom_prompt}}
+
+Here are some important additional instructions on how to process and consolidate this documentation:
+
+{{data.custom_prompt}}
+
+{{/if}}
+
+# Output
+
+```lua
+
+if ai_response == nil then
+  return "no AI Response"
+end
+
+-- remove the eventual block content
+local content = aip.md.outer_block_content_or_raw(ai_response.content)
+
+local docaify_path = data.dir_5_docaify .. "/doc-for-llm.md"
+local docaify_file = aip.file.save(docaify_path, content, {trim_start = true, single_trailing_newline = true})
+local docaify_size_fmt = aip.text.format_size(docaify_file.size, {trim = true})
+local msg = "✅ " .. docaify_path .. " processed (" .. docaify_size_fmt .. ")."
+aip.run.pin("status", {label = "DONE:", content = msg})
+
+return {
+  _display       = "Docaify File (" .. docaify_size_fmt .. ")" .. "\n➜ " .. docaify_path,
+  docaify_path   = docaify_path,
+  docaify_size   = docaify_file.size
+}
+
+```
+
+# After All
+
+```lua
+
+return {
+  docaify_path = outputs[1].docaify_path,
+  docaify_size = outputs[1].docaify_size
+}
+
+```

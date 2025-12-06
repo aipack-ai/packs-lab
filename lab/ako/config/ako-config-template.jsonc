@@ -25,7 +25,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// OpenAI Cookbook
@@ -47,7 +51,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// Alchemy (blockchain)
@@ -69,7 +77,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// Local Files
@@ -91,7 +103,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 
@@ -114,7 +130,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 //// IMFusion (C++ SDK, medical imaging)
@@ -135,7 +155,11 @@
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
-//            "llms_prompt": "./my-custom-llms-instruction.md"	// Optional (ignored if not found)				 
+//            "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
+// // -- docaify (single doc consolidation)
+//             "do_docaify": true,
+//          "docaify_model": "gemini-flash-latest",
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)				 
 // }
 
 

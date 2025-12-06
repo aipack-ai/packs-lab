@@ -7,6 +7,7 @@ local p_utils = require("prompt_utils")
 local LABEL_FETCH_SLIM = "   Fetch & Slim Agent:"
 local LABEL_AUGMENT    = "Clean & Augment Agent:"
 local LABEL_LLMS       = "     llms Index Agent:"
+local LABEL_DOCAIFY    = "      Docaify Agent:"
 local LABEL_SUMMARY    = "              Summary:"
 
 -- If return a string, means not valid, and it's the message
@@ -36,6 +37,7 @@ if init_res.type == "config" then
   aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "⏸ Queued"})
   aip.run.pin("augm", 1,       { label = LABEL_AUGMENT, content = "⏸ Queued"})
   aip.run.pin("llms", 2,       { label = LABEL_LLMS, content = "⏸ Queued"})
+  aip.run.pin("docaify", 3,    { label = LABEL_DOCAIFY, content = "⏸ Queued"})
 
   -- == Run Slim
   aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "▶ Running"})
@@ -112,6 +114,20 @@ if init_res.type == "config" then
   else
      local llms_msg = "■■ SKIP ➜ " .. "(do_llms = false or no files to llms)"
      aip.run.pin("llms", 2,  { label = LABEL_LLMS, content = llms_msg})
+  end
+
+  -- == Run docaify
+  if settings.config.do_docaify == nil or settings.config.do_docaify == true then 
+     aip.run.pin("docaify", 3, { label = LABEL_DOCAIFY, content = "▶ Running"})
+     
+     local docaify_data = aip.agent.run("docaify", {inputs = { config.config_path } }).after_all
+     local docaify_size_fmt = aip.text.format_size(docaify_data.docaify_size, { trim = true})
+     local docaify_msg = "✅ DONE ➜ " .. docaify_data.docaify_path .. " (" .. docaify_size_fmt .. ")"
+     
+     aip.run.pin("docaify", 3,  { label = LABEL_DOCAIFY, content = docaify_msg})
+  else
+     local docaify_msg = "■■ SKIP ➜ " .. "(do_docaify = false)"
+     aip.run.pin("docaify", 3,  { label = LABEL_DOCAIFY, content = docaify_msg})
   end
 
   -- == Pin final
