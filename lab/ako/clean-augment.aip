@@ -120,12 +120,6 @@ if input.max_size_kb and raw_md_file.size > (max_size_kb * 1000) then
   return aip.flow.skip(msg)
 end
 
-local prompt_path = before_all.settings.config.augment_prompt
-local custom_prompt = nil
-if prompt_path and aip.path.exists(prompt_path) then
-  custom_prompt = aip.file.load(prompt_path).content
-end
-
 -- Load the augment instruction from instructions folder
 local p_utils = require("prompt_utils")
 local instruction_aug = p_utils.load_instruction(before_all.settings.config.config_path, "instruction-1-aug.md")
@@ -135,8 +129,7 @@ aip.run.pin("progress", 0, {label = "Progress:", content = "➜ " .. raw_md_file
 return {
     raw_md_file     = raw_md_file,
     dest_path       = dest_path,
-    custom_prompt   = custom_prompt,
-    instruction_aug = instruction_aug or custom_prompt or ""
+    instruction_aug = instruction_aug or ""
 }
 ```
 
@@ -144,11 +137,7 @@ return {
 
 # Instruction
 
-{{#if data.custom_prompt}}
-{{data.custom_prompt}}
-{{else}}
 {{data.instruction_aug}}
-{{/if}}
 
 Here is the raw content
 

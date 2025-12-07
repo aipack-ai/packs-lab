@@ -34,14 +34,11 @@ The ako-config.jsonc file supports the following options:
 - `max_size_kb`: Maximum file size in KB; files larger than this will be skipped during augmentation.
 - `augment_model`: Model to use for augmentation (e.g., `gemini-flash-latest`).
 - `concurrency`: Number of concurrent augmentation tasks.
-- `augment_prompt`: Optional path to custom augmentation instructions (ignored if not found).
 - `do_llms`: (default: true) Enable generation of LLM index file (llms.md).
 - `llms_model`: Model to use for LLM index generation.
-- `llms_prompt`: Optional path to custom llms index instructions (ignored if not found).
 - `do_docaify`: (default: true) Enable single document consolidation (docaify).
 - `docaify_model`: Model to use for docaify.
 - `docaify_target_path`: Optional custom output path for the docaified document (by default in `$ako_out_dir/5-docaify/doc-for-llm.md`).
-- `docaify_prompt`: Optional path to custom docaify instructions (ignored if not found).
 
 ## Example Configurations
 
@@ -65,16 +62,13 @@ The following examples are available for reference. Copy the desired block into 
            "max_size_kb": 200, // in KB, above which the file will be skipped
          "augment_model": "gemini-flash-latest",
            "concurrency": 6,
-        "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // -- llms index
                "do_llms": true,
             "llms_model": "gemini-flash-latest",
-           "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
 // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-        "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 }
 ```
 
@@ -96,16 +90,13 @@ The following examples are available for reference. Copy the desired block into 
            "max_size_kb": 200, // in KB, above which the file will be skipped
          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
            "concurrency": 6,
-        "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)	
 // -- llms index
                "do_llms": true,
             "llms_model": "gemini-flash-latest",
-           "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
 // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-        "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 }
 ```
 
@@ -126,16 +117,13 @@ The following examples are available for reference. Copy the desired block into 
            "max_size_kb": 200, // in KB, above which the file will be skipped
          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
            "concurrency": 16,
-        "augment_prompt": "./my-augment-instruction.md",	// Optional (ignored if not found)
 // -- llms index
                "do_llms": true,
             "llms_model": "gemini-flash-latest",
-           "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
 // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-        "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 }
 ```
 
@@ -157,16 +145,13 @@ The following examples are available for reference. Copy the desired block into 
            "max_size_kb": 200, // in KB, above which the file will be skipped
          "augment_model": "gemini-flash-latest",
            "concurrency": 6,
-        "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
 // -- llms index
                "do_llms": true,
             "llms_model": "gemini-flash-latest",
-           "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
 // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-        "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 }
 ```
 
@@ -187,15 +172,12 @@ The following examples are available for reference. Copy the desired block into 
            "max_size_kb": 200, // in KB, above which the file will be skipped
          "augment_model": "gemini-flash-latest", // Models can be any providers "gemini-2.5-flash"
            "concurrency": 6,
-        "augment_prompt": "./my-custom-augment-instruction.md",	// Optional (ignored if not found)
 // -- llms index
                "do_llms": true,
             "llms_model": "gemini-flash-latest",
-           "llms_prompt": "./my-custom-llms-instruction.md",	// Optional (ignored if not found)
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
 // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-        "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 }
 ```

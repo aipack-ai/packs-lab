@@ -38,12 +38,6 @@ end
 local msg =    "Processing llms.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
 
-local prompt_path = settings.config.llms_prompt
-local custom_prompt = nil
-if prompt_path and aip.path.exists(prompt_path) then
-  custom_prompt = aip.file.load(prompt_path).content
-end
-
 -- Load the llms instruction from instructions folder
 local instruction_llms = p_utils.load_instruction(config.config_path, "instruction-2-llms-index.md")
 
@@ -55,9 +49,8 @@ return aip.flow.data_response({
   },
   data = {
     files            = files,
-    custom_prompt    = custom_prompt,
     dir_4_final_md   = settings.dir_4_final_md,
-    instruction_llms = instruction_llms or custom_prompt or ""
+    instruction_llms = instruction_llms or ""
   }
 })
 
@@ -80,11 +73,7 @@ Here are all of the files we need to build a llms.md for.
 
 {{/each}}
 
-{{#if data.custom_prompt}}
-{{data.custom_prompt}}
-{{else}}
 {{data.instruction_llms}}
-{{/if}}
 
 # Output
 

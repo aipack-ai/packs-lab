@@ -37,12 +37,6 @@ end
 local msg = "Processing doc-for-llm.md for ➜ " .. #files .. " files"
 aip.run.pin("status", {label = "Starting:", content = msg})
 
-local prompt_path = settings.config.docaify_prompt
-local custom_prompt = nil
-if prompt_path and aip.path.exists(prompt_path) then
-  custom_prompt = aip.file.load(prompt_path).content
-end
-
 -- Load the docaify instruction from instructions folder
 local instruction_docaify = p_utils.load_instruction(config.config_path, "instruction-3-docaify.md")
 
@@ -73,10 +67,9 @@ return aip.flow.data_response({
   },
   data = {
     final_files         = files,
-    custom_prompt       = custom_prompt,
     dir_5_docaify       = settings.dir_5_docaify,
     docaify_path        = docaify_path,
-    instruction_docaify = instruction_docaify or custom_prompt or ""
+    instruction_docaify = instruction_docaify or ""
   }
 })
 
@@ -97,11 +90,7 @@ Here are all of the doc files to consolidate to one doc file for LLM and agent.
 
 {{/each}}
 
-{{#if data.custom_prompt}}
-{{data.custom_prompt}}
-{{else}}
 {{data.instruction_docaify}}
-{{/if}}
 
 # Output
 
