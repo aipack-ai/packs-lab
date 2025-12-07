@@ -126,12 +126,17 @@ if prompt_path and aip.path.exists(prompt_path) then
   custom_prompt = aip.file.load(prompt_path).content
 end
 
+-- Load the augment instruction from instructions folder
+local p_utils = require("prompt_utils")
+local instruction_aug = p_utils.load_instruction(before_all.settings.config.config_path, "instruction-1-aug.md")
+
 aip.run.pin("progress", 0, {label = "Progress:", content = "➜ " .. raw_md_file.path})
 
 return {
-    raw_md_file   = raw_md_file,
-    dest_path     = dest_path,
-    custom_prompt = custom_prompt
+    raw_md_file     = raw_md_file,
+    dest_path       = dest_path,
+    custom_prompt   = custom_prompt,
+    instruction_aug = instruction_aug or custom_prompt or ""
 }
 ```
 
@@ -139,21 +144,11 @@ return {
 
 # Instruction
 
-Your goal is to augment & fix the given file content following the following rules: 
-
-- Make it well-structured, with markdown sections.
-- Remove the site navigation section; only page content should be kept.
-- Use the dash character `-` for bullet points.
-- Sometimes the markdown link text has an extra blank line; make sure they are all on one line. Inside the [ ... ] there should not be any newline.
-- Identify possible code blocks:
-  - Remove line numbers.
-  - Wrap them in markdown code blocks with the appropriate language.
-  - Only use the code block language 'json' for valid JSON content; otherwise 'js' for JavaScript-like content, or 'text'.
-  - If it looks like shell command use the `sh` language
-  - Indent the code properly.
-- For the main page title, use the # level.
-- Do not separate sections with `---`
-
+{{#if data.custom_prompt}}
+{{data.custom_prompt}}
+{{else}}
+{{data.instruction_aug}}
+{{/if}}
 
 Here is the raw content
 
@@ -177,17 +172,6 @@ The FILE_SUMMARY_CONTENT should one concise sentence, empty line, and then 3 con
 
 The NEW_FILE_CONTENT and FILE_SUMMARY_CONTENT should be without the surrounding in a markdown code block.
 
-# Instruction
-
-{{#if data.custom_prompt}}
-
-Here are some important additional instructions on how to process this raw markdown file
-
-{{data.custom_prompt}}
-
-{{/if}}
-
-
 # Output 
 
 ```lua
@@ -195,7 +179,6 @@ Here are some important additional instructions on how to process this raw markd
 local content = ai_response.content
 
 local elem_by_name = aip.tag.extract_as_map(content, {"file_augmented_content", "file_summary_content"})
-
 
 local aug_file = nil
 if elem_by_name.file_augmented_content then

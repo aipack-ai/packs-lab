@@ -43,6 +43,9 @@ if prompt_path and aip.path.exists(prompt_path) then
   custom_prompt = aip.file.load(prompt_path).content
 end
 
+-- Load the docaify instruction from instructions folder
+local instruction_docaify = p_utils.load_instruction(config.config_path, "instruction-3-docaify.md")
+
 -- Resolve the docaify output path
 local docaify_path = nil
 local docaify_target_path = settings.config.docaify_target_path
@@ -69,10 +72,11 @@ return aip.flow.data_response({
     model = config.docaify_model or config.llms_model
   },
   data = {
-    final_files     = files,
-    custom_prompt   = custom_prompt,
-    dir_5_docaify   = settings.dir_5_docaify,
-    docaify_path    = docaify_path
+    final_files         = files,
+    custom_prompt       = custom_prompt,
+    dir_5_docaify       = settings.dir_5_docaify,
+    docaify_path        = docaify_path,
+    instruction_docaify = instruction_docaify or custom_prompt or ""
   }
 })
 
@@ -93,28 +97,10 @@ Here are all of the doc files to consolidate to one doc file for LLM and agent.
 
 {{/each}}
 
-With all of this content, create a very concise, dry, but complete single documentation file that contains all of the necessary information for an LLM or Agent to be able to use the APIs.
-
-Guidelines for the single:
-- Create very concise, dry, but complete API documentation
-- For scripting languages, like JavaScript, TypeScript, and Python, use TypeScript type definitions to express types and function signatures
-- For typed languages, use the language typing system
-- Remove redundant explanations, verbosity, and unnecessary descriptions
-- If the type, signature, or arguments speak for themselves, be dry, you do not need to add anything
-- Only add additional information if nuance or something could be ambiguous or not clear from the type or function signature 
-- Focus on API signatures, parameters, return types, and essential usage notes
-- Organize content logically by module or feature
-- Preserve all essential information needed to use the APIs
-- Remove navigation elements, duplicate content, and filler text
-
-# Instruction
-
 {{#if data.custom_prompt}}
-
-Here are some important additional instructions on how to process and consolidate this documentation:
-
 {{data.custom_prompt}}
-
+{{else}}
+{{data.instruction_docaify}}
 {{/if}}
 
 # Output

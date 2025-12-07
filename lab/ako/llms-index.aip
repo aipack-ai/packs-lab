@@ -44,6 +44,9 @@ if prompt_path and aip.path.exists(prompt_path) then
   custom_prompt = aip.file.load(prompt_path).content
 end
 
+-- Load the llms instruction from instructions folder
+local instruction_llms = p_utils.load_instruction(config.config_path, "instruction-2-llms-index.md")
+
 print("Creating llms.md for " .. #files .. " files")
 
 return aip.flow.data_response({
@@ -51,9 +54,10 @@ return aip.flow.data_response({
     model = config.llms_model
   },
   data = {
-    files          = files,
-    custom_prompt  = custom_prompt,
-    dir_4_final_md = settings.dir_4_final_md
+    files            = files,
+    custom_prompt    = custom_prompt,
+    dir_4_final_md   = settings.dir_4_final_md,
+    instruction_llms = instruction_llms or custom_prompt or ""
   }
 })
 
@@ -63,56 +67,23 @@ return aip.flow.data_response({
 
 You are an agent that create `llms.md` in markdown from a list of files and their content. 
 
-A summary of each file will be given, and your goal create single index files with the summary for each
-
-Here is the format of the llms.md (use this format except if the user ask for something different)
-
-```
-# overall_doc_title
-
-ONE_PARAGRAPH_SUMMARY
-
-## file_path_without_the_sum_prefix_dir
-
-FILE_CONCISE_SUMMARY
-
-## ...next file
-```
-
-So, for each file, we will have a `## file_path_without_the_sum_prefix_dir` section. The path provided is already relative to the generated documentation root.
-
-The `FILE_CONCISE_SUMMARY` is a very concise summary of the file, condensed into 1 to 3 concise sentences that focus solely on describing its essence.
-
-No need to preface the paragraph with "This document..."; simply state directly what this file is about. For example
-
-- Do not start with "This document provides an overview of ..."
-- But just with "Overview of ..."
-
-It is already clear which file this section pertains to.
-
 # Instruction
 
 Here are all of the files we need to build a llms.md for. 
 
 {{#each data.files}}
-{{this.rel_path}}
-```{{this.ext}}
+<FILE_CONTENT file_path = "{{this.rel_path}}>
+````{{this.ext}}
 {{this.content}}
-```
+````
+</FILE_CONTENT>
 
 {{/each}}
 
-- Make sure that for each file you add the description of the file. 
-- Make sure the link paths are relative to the root website site (without the leading /)
-
-# Instruction
-
 {{#if data.custom_prompt}}
-
-Here are some important additional instructions on how to process this raw markdown file
-
 {{data.custom_prompt}}
-
+{{else}}
+{{data.instruction_llms}}
 {{/if}}
 
 # Output

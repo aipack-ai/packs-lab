@@ -164,6 +164,49 @@ function validate_aip_version()
   end
 end
 
+-- Ensures instruction files exist in the config directory's instructions folder
+-- Copies from template if they don't exist
+-- Returns table of created file paths
+function ensure_instruction_files(config_path)
+  local config_dir = aip.path.parent(config_path) or "."
+  local instructions_dir = config_dir .. "/instructions"
+  
+  local instruction_files = {
+    { src = "instruction-1-aug.md", dest = "instruction-1-aug.md" },
+    { src = "instruction-2-llms-index.md", dest = "instruction-2-llms-index.md" },
+    { src = "instruction-3-docaify.md", dest = "instruction-3-docaify.md" },
+  }
+  
+  local created = {}
+  
+  for _, file_info in ipairs(instruction_files) do
+    local dest_path = instructions_dir .. "/" .. file_info.dest
+    if not aip.path.exists(dest_path) then
+      local src_path = CTX.AGENT_FILE_DIR .. "/config/" .. file_info.src
+      if aip.path.exists(src_path) then
+        local content = aip.file.load(src_path).content
+        aip.file.save(dest_path, content)
+        table.insert(created, dest_path)
+      end
+    end
+  end
+  
+  return created
+end
+
+-- Loads instruction content from the config directory's instructions folder
+-- Returns the content string or nil if not found
+function load_instruction(config_path, instruction_filename)
+  local config_dir = aip.path.parent(config_path) or "."
+  local instruction_path = config_dir .. "/instructions/" .. instruction_filename
+  
+  if aip.path.exists(instruction_path) then
+    return aip.file.load(instruction_path).content
+  end
+  
+  return nil
+end
+
 -- SetupInfo type:
 -- {
 --   type: "skip" | "message" | "ready",
@@ -173,6 +216,7 @@ end
 --   settings?: table,            -- when type == "ready"
 --   config_path?: string,        -- when type == "ready"
 --   readme_created?: boolean,    -- when type == "ready"
+--   instructions_created?: string[], -- when type == "ready"
 -- }
 
 -- Main setup function that handles all initialization logic
@@ -213,21 +257,27 @@ function setup(input)
     readme_created = true
   end
 
+  -- Ensure instruction files exist
+  local instructions_created = ensure_instruction_files(config.config_path)
+
   return {
     type = "ready",
     config = config,
     settings = settings,
     config_path = config.config_path,
     readme_path = readme_path,
-    readme_created = readme_created
+    readme_created = readme_created,
+    instructions_created = instructions_created
   }
 end
 
 -- == Return the functions for this module
 return {
-  canonicize           = canonicize,
-  validate_aip_version = validate_aip_version, 
-  init_config          = init_config,
-  build_settings       = build_settings,
-  setup                = setup,
+  canonicize                = canonicize,
+  validate_aip_version      = validate_aip_version, 
+  init_config               = init_config,
+  build_settings            = build_settings,
+  setup                     = setup,
+  ensure_instruction_files  = ensure_instruction_files,
+  load_instruction          = load_instruction,
 }
