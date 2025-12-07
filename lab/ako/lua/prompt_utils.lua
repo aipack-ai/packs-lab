@@ -1,4 +1,4 @@
-local CONFIG_PATH  = "./ako-config.jsonc"
+local CONFIG_PATH  = ".aipack/.prompt/" .. (CTX.PACK_IDENTITY or "lab@ako") .. "/ako-config.jsonc"
 
 -- Converts a string (URL, path, etc.) into a folder-friendly canonical form.
 -- All single or consecutive special characters are collapsed to `-`.
@@ -26,7 +26,7 @@ end
 
 -- Init or check that the config is present
 -- `input` can be the path of a json file with the config
---         or the default will be `./ako-config.jsonc`
+--         or the default will be `.aipack/.prompt/lab@ako/ako-config.jsonc`
 -- Returns 
 --  - { type = "message", data = string } if something needs to be done by the user
 --  - { type = "config",  data = {... config ...} }
@@ -37,9 +37,9 @@ function init_config(input)
   if not aip.path.exists(config_path) then
     local xp_config_path = CTX.AGENT_FILE_DIR .. "/config/ako-config-template.jsonc"
     local config_content = aip.file.load(xp_config_path).content
-    aip.file.save(CONFIG_PATH, config_content)
+    aip.file.save(config_path, config_content)
 
-    msg = config_edit_msg(CONFIG_PATH)
+    msg = config_edit_msg(config_path)
 
     return {
       type = "message",
