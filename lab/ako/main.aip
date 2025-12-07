@@ -7,7 +7,7 @@ local p_utils = require("prompt_utils")
 local LABEL_FETCH_SLIM = "   Fetch & Slim Agent:"
 local LABEL_AUGMENT    = "Clean & Augment Agent:"
 local LABEL_LLMS       = "     llms Index Agent:"
-local LABEL_DOCAIFY    = "      Docaify Agent:"
+local LABEL_DOCAIFY    = "        Docaify Agent:"
 local LABEL_SUMMARY    = "              Summary:"
 
 -- If return a string, means not valid, and it's the message

@@ -43,6 +43,25 @@ if prompt_path and aip.path.exists(prompt_path) then
   custom_prompt = aip.file.load(prompt_path).content
 end
 
+-- Resolve the docaify output path
+local docaify_path = nil
+local docaify_target_path = settings.config.docaify_target_path
+
+if docaify_target_path then
+  -- Check if it ends with .md (file path) or not (folder path)
+  if docaify_target_path:match("%.md$") then
+    docaify_path = docaify_target_path
+  else
+    -- It's a folder, derive lib name from base_data_dir
+    local base_data_dir_obj = aip.path.parse(settings.base_data_dir)
+    local lib_name = base_data_dir_obj.stem or "lib"
+    docaify_path = docaify_target_path .. "/" .. lib_name .. "-doc-for-llm.md"
+  end
+else
+  -- Default behavior: use dir_5_docaify
+  docaify_path = settings.dir_5_docaify .. "/doc-for-llm.md"
+end
+
 print("Creating doc-for-llm.md from " .. #files .. " files")
 
 return aip.flow.data_response({
@@ -52,7 +71,8 @@ return aip.flow.data_response({
   data = {
     final_files     = files,
     custom_prompt   = custom_prompt,
-    dir_5_docaify   = settings.dir_5_docaify
+    dir_5_docaify   = settings.dir_5_docaify,
+    docaify_path    = docaify_path
   }
 })
 
@@ -107,7 +127,7 @@ end
 -- remove the eventual block content
 local content = aip.md.outer_block_content_or_raw(ai_response.content)
 
-local docaify_path = data.dir_5_docaify .. "/doc-for-llm.md"
+local docaify_path = data.docaify_path
 local docaify_file = aip.file.save(docaify_path, content, {trim_start = true, single_trailing_newline = true})
 local docaify_size_fmt = aip.text.format_size(docaify_file.size, {trim = true})
 local msg = "✅ " .. docaify_path .. " processed (" .. docaify_size_fmt .. ")."
