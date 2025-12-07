@@ -10,6 +10,10 @@ local LABEL_LLMS       = "     llms Index Agent:"
 local LABEL_DOCAIFY    = "        Docaify Agent:"
 local LABEL_SUMMARY    = "              Summary:"
 
+local LABEL_SUM_FROM_ORG = "        From Original HTMLs size: "
+local LABEL_SUM_AI_MD    = "   To AI Optimized Markdown size: "
+local LABEL_SUM_DOCAIFY  = "                 To docaify size: "
+
 -- If return a string, means not valid, and it's the message
 local valid = p_utils.validate_aip_version()
 if type(valid) == "string" then
@@ -131,7 +135,7 @@ if init_res.type == "config" then
      aip.run.pin("docaify", 3,  { label = LABEL_DOCAIFY, content = docaify_msg})
   end
 
-  -- == Pin final
+  -- == Pin final summary (after docaify)
   local original_size_fmt = aip.text.format_size(orig_html_total_size, "MB")
   local final_size = aip.file.stats(settings.dir_4_final_md .. "/**/*.*").total_size
   local final_size_fmt = aip.text.format_size(final_size, "MB")
@@ -140,11 +144,38 @@ if init_res.type == "config" then
     final_size_fmt = final_size_fmt .. " (" .. full_size_fmt .. ")"
   end
 
-  local final_msg = "✅ ALL DONE"
-  final_msg = final_msg .. "\n" .. "     From Original HTMLs size: " .. original_size_fmt
-  final_msg = final_msg .. "\n" .. "To AI Optimized Markdown size: " .. final_size_fmt .. " including llms.md"
+  -- Get docaify file size if it exists
+  local docaify_size_fmt = nil
+  local docaify_path = settings.dir_5_docaify .. "/doc-for-llm.md"
+  -- Check if custom docaify_target_path was specified
+  if settings.config.docaify_target_path then
+    if settings.config.docaify_target_path:match("%.md$") then
+      docaify_path = settings.config.docaify_target_path
+    else
+      local base_data_dir_obj = aip.path.parse(settings.base_data_dir)
+      local lib_name = base_data_dir_obj.stem or "lib"
+      docaify_path = settings.config.docaify_target_path .. "/" .. lib_name .. "-doc-for-llm.md"
+    end
+  end
+  if aip.path.exists(docaify_path) then
+    local docaify_info = aip.file.info(docaify_path)
+    if docaify_info and docaify_info.size then
+      docaify_size_fmt = aip.text.format_size(docaify_info.size, "MB")
+      if docaify_info.size < 1000000 then
+        local full_docaify_size_fmt = aip.text.format_size(docaify_info.size, { trim = true})
+        docaify_size_fmt = docaify_size_fmt .. " (" .. full_docaify_size_fmt .. ")"
+      end
+    end
+  end
 
-  aip.run.pin("final", 2, { label = LABEL_SUMMARY, content = final_msg})
+  local final_msg = "✅ ALL DONE"
+  final_msg = final_msg .. "\n" .. LABEL_SUM_FROM_ORG .. original_size_fmt
+  final_msg = final_msg .. "\n" .. LABEL_SUM_AI_MD .. final_size_fmt .. " including llms.md"
+  if docaify_size_fmt then
+    final_msg = final_msg .. "\n" .. LABEL_SUM_DOCAIFY .. docaify_size_fmt
+  end
+
+  aip.run.pin("final", 4, { label = LABEL_SUMMARY, content = final_msg})
 else 
   print("init response unknown", init_res)
 end
