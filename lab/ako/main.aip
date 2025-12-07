@@ -23,7 +23,8 @@ local input = inputs and inputs[1] or nil
 local init_res = p_utils.init_config(input)
 
 if init_res.type == "message" then
-  aip.run.pin("msg", 0, { label = "Action Needed:", content = init_res.data} )
+  local msg = init_res.data .. "\n\n(Alt click on the file path above to open the file in your editor)"
+  aip.run.pin("msg", 0, { label = "Action Needed:", content = msg} )
   return {
     init_res = init_res
   }

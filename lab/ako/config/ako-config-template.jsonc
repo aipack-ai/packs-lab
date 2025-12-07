@@ -36,8 +36,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 //// OpenAI Cookbook
@@ -63,8 +63,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 //// Alchemy (blockchain)
@@ -90,8 +90,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 //// Local Files
@@ -117,8 +117,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 
@@ -145,8 +145,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 //// IMFusion (C++ SDK, medical imaging)
@@ -171,8 +171,8 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md"	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
-//         "docaify_prompt": "./my-custom-docaify-instruction.md"	// Optional (ignored if not found)
+// // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
 
 
