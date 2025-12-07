@@ -2,13 +2,10 @@
 [pack]
 namespace = "lab" # aipack.ai lab namespace
 name      = "polychat"      # pack name (so aip install lab@ako)
-version   = "0.1.1"
+version   = "0.1.2-WIP"
 
 license  = "MIT or Apache 2"
 homepage = "https://aipack.ai/"
 repo     = "https://github.com/aipack-ai/aipack-lab"
 author   = "Jeremy Chone"
 email    = "jeremy.chone@gmail.com"
-
-
-
