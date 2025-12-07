@@ -1,5 +1,25 @@
 local CONFIG_PATH  = "./ako-config.jsonc"
 
+-- Converts a string (URL, path, etc.) into a folder-friendly canonical form.
+-- All single or consecutive special characters are collapsed to `-`.
+-- Example: "docs.rs/xmltree/0.12.0/xmltree/" -> "docs-rs-xmltree-0-12-0-xmltree"
+function canonicize(some_string)
+  if some_string == nil then
+    return nil
+  end
+  
+  -- Remove protocol prefix if present (http://, https://, etc.)
+  local str = some_string:gsub("^%w+://", "")
+  
+  -- Replace any sequence of non-alphanumeric characters with a single dash
+  str = str:gsub("[^%w]+", "-")
+  
+  -- Remove leading and trailing dashes
+  str = str:gsub("^%-+", ""):gsub("%-+$", "")
+  
+  return str
+end
+
 function config_edit_msg(config_path)
   return "Edit the prompt file:\n\n➜ " .. config_path .. "\n\n(Activate or customize the section you want to run and press 'r')"
 end
@@ -64,7 +84,9 @@ function build_settings(config)
   
   if config.base_url then
     local url_obj   = aip.web.parse_url(config.base_url)
-    base_data_dir = config.out_dir .. "/" .. url_obj.host
+    -- Use canonicize to create folder name from host + path
+    local canonical_name = canonicize(url_obj.host .. (url_obj.path or ""))
+    base_data_dir = config.out_dir .. "/" .. canonical_name
     src_type = "web"
     
     -- Extract path part from base_url to be used as a prefix to strip off from fetched URLs' paths
@@ -117,6 +139,7 @@ end
 
 -- == Return the functions for this module
 return {
+  canonicize           = canonicize,
   validate_aip_version = validate_aip_version, 
   init_config          = init_config,
   build_settings       = build_settings,
