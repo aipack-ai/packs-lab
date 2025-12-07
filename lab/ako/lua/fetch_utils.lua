@@ -47,9 +47,26 @@ end
 function process_links(links, page_urls_map, current_page_url, fetch_ctx) 
   local max_pages         = fetch_ctx.settings.config.max_pages
   local base_url          = fetch_ctx.settings.config.base_url
-  local filter_path       = fetch_ctx.settings.config.filter_path or "/"
   local fetch_exclude_globs = fetch_ctx.settings.config.fetch_exclude_globs or {}
   local has_exclude_globs = fetch_ctx.has_exclude_globs
+
+  -- Resolve fetch_filter_path: if relative, prepend base_url_path_prefix; if absolute or nil, use as-is
+  local fetch_filter_path = fetch_ctx.settings.config.fetch_filter_path
+  local filter_path
+  if fetch_filter_path == nil then
+    filter_path = "/"
+  elseif fetch_filter_path:sub(1,1) == "/" then
+    -- Absolute path
+    filter_path = fetch_filter_path
+  else
+    -- Relative path: prepend base_url_path_prefix
+    local prefix = fetch_ctx.settings.base_url_path_prefix or "/"
+    -- Ensure prefix ends with /
+    if prefix:sub(-1) ~= "/" then
+      prefix = prefix .. "/"
+    end
+    filter_path = prefix .. fetch_filter_path
+  end
 
   local links_queue = {}
   for i, link in ipairs(links) do

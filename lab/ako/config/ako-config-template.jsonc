@@ -12,6 +12,12 @@
 //
 // - `$ako_config_dir` points to the directory of the ako config. 
 //                     Otherwise, if relative, it is relative to the workspace directory (the parent directory of the `.aipack/` ).
+//
+// - `fetch_filter_path`: Filters fetched URLs to only include those whose path starts with this value.
+//                        If relative (no leading `/`), it is relative to the base_url path.
+//                        If absolute (starts with `/`), it matches from the URL root.
+//                        Example: If base_url is "https://docs.example.com/api/v2/" and fetch_filter_path is "reference/",
+//                                 only URLs under "https://docs.example.com/api/v2/reference/" will be fetched.
 
 //// Rust library
 // {
@@ -21,6 +27,7 @@
 //               "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
 //             "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
 //              "max_pages": 10,
+// //   "fetch_filter_path": "/base/path/only/",
 // // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -48,6 +55,7 @@
 //               "base_url": "https://cookbook.openai.com/examples/",
 //             "first_page": "https://cookbook.openai.com/examples/",
 //              "max_pages": 10,
+// //   "fetch_filter_path": "/base/path/only/",
 // // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -75,6 +83,7 @@
 //               "base_url": "https://www.alchemy.com/docs/",
 //             "first_page": "https://www.alchemy.com/docs/reference/token-api-quickstart",
 //              "max_pages": 10, // put to 300 to download the full alchemy doc (sub MB when optimized!)
+// //   "fetch_filter_path": "/base/path/only/",
 //    "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -130,6 +139,7 @@
 //               "base_url": "https://tauri.app/reference/",
 //             "first_page": "https://tauri.app/reference/acl/capability/",
 //              "max_pages": 10,
+// //   "fetch_filter_path": "/base/path/only/",
 // // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -157,6 +167,7 @@
 //               "base_url": "https://docs.imfusion.com/cppsdk/",
 //             "first_page": "https://docs.imfusion.com/cppsdk/index.html",
 //              "max_pages": 10,
+// //   "fetch_filter_path": "/base/path/only/",
 //    "fetch_exclude_globs": ["**/{doxygen_crawl,namespace_im_fusion,_changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -174,5 +185,6 @@
 // // "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
 //         "docaify_prompt": "./my-custom-docaify-instruction.md"	          // Optional (ignored if not found)
 // }
+
 
 
