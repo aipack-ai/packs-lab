@@ -5,10 +5,17 @@
 // - You can create or customize your own section.
 // - Recommendation: Start with a relatively low max_pages number, like 10, and then
 //                   increase it when you have achieved the desired result on the small subset.
+//
+// - Model Recommendation: 
+//   - Use a small model like `haiku` or `flash` for the augment and LLM index. They are plenty good enough. 
+//   - Use `flash` if possible when the final content is large (> 2MB), so that it is not context limited
+//
+// - `$ako_config_dir` points to the directory of the ako config. 
+//                     Otherwise, if relative, it is relative to the workspace directory (the parent directory of the `.aipack/` ).
 
 //// Rust library
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
@@ -35,7 +42,7 @@
 
 //// OpenAI Cookbook
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://cookbook.openai.com/examples/",
@@ -62,7 +69,7 @@
 
 //// Alchemy (blockchain)
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://www.alchemy.com/docs/",
@@ -89,7 +96,7 @@
 
 //// Local Files
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_dir": "path/to/dir/",
@@ -117,7 +124,7 @@
 
 //// Tauri Web Site 
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://tauri.app/reference/",
@@ -144,7 +151,7 @@
 
 //// IMFusion (C++ SDK, medical imaging)
 // {
-//                "out_dir": "out/ako",
+//                "out_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://docs.imfusion.com/cppsdk/",
