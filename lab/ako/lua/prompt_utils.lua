@@ -31,7 +31,8 @@ end
 --  - { type = "message", data = string } if something needs to be done by the user
 --  - { type = "config",  data = {... config ...} }
 function init_config(input)
-  config_path = type(input) == "string" and input or CONFIG_PATH
+  local config_path = type(input) == "string" and input or CONFIG_PATH
+  local res = { config_path = config_path }
 
   -- == If the config does not exist, create it, and prompt user
   if not aip.path.exists(config_path) then
@@ -39,21 +40,9 @@ function init_config(input)
     local config_content = aip.file.load(xp_config_path).content
     aip.file.save(config_path, config_content)
 
-    -- Also create README.md from template next to the config
-    local config_dir = aip.path.parent(config_path) or "."
-    local readme_path = config_dir .. "/README.md"
-    if not aip.path.exists(readme_path) then
-      local readme_template_path = CTX.AGENT_FILE_DIR .. "/config/readme-template.md"
-      local readme_content = aip.file.load(readme_template_path).content
-      aip.file.save(readme_path, readme_content)
-    end
-
-    msg = config_edit_msg(config_path)
-
-    return {
-      type = "message",
-      data = msg
-    }
+    res.data = config_edit_msg(config_path)
+    res.type = "message"
+    return res
   end
 
   -- == Load config
@@ -61,11 +50,9 @@ function init_config(input)
 
   -- == If config empty, prompt user to edit it 
   if config == nil then
-      msg = config_edit_msg(config_path)
-      return {
-        type = "message",
-        data = msg
-      }
+      res.data = config_edit_msg(config_path)
+      res.type = "message"
+      return res
   end
 
   -- == Needs to remove the starting "./" as aip.path.diff will create wrong path (will be solved in future aipack)
@@ -76,11 +63,9 @@ function init_config(input)
   -- == Otherise, we can return the config
   -- Add config_path
   config.config_path = config_path
-  return {
-    type = "config",
-    data = config
-  }
-
+  res.data = config
+  res.type = "config"
+  return res
 end
 
 -- Resolves out_dir, supporting $ako_config_dir/ prefix
@@ -170,6 +155,7 @@ end
 function ensure_instruction_files(config_path)
   local config_dir = aip.path.parent(config_path) or "."
   local instructions_dir = config_dir .. "/instructions"
+  print(config_dir)
   
   local instruction_files = {
     { src = "instruction-1-aug.md", dest = "instruction-1-aug.md" },
@@ -234,20 +220,10 @@ function setup(input)
 
   -- Initialize config
   local init_res = init_config(input)
-
-  if init_res.type == "message" then
-    return {
-      type = "message",
-      message = init_res.data
-    }
-  end
-
-  -- Assuming type == "config"
-  local config = init_res.data
-  local settings = build_settings(config)
+  local config_path = init_res.config_path
 
   -- Create README.md from template if it doesn't exist
-  local config_dir = aip.path.parent(config.config_path) or "."
+  local config_dir = aip.path.parent(config_path) or "."
   local readme_path = config_dir .. "/README.md"
   local readme_created = false
   if not aip.path.exists(readme_path) then
@@ -258,13 +234,28 @@ function setup(input)
   end
 
   -- Ensure instruction files exist
-  local instructions_created = ensure_instruction_files(config.config_path)
+  local instructions_created = ensure_instruction_files(config_path)
+
+  if init_res.type == "message" then
+    return {
+      type = "message",
+      message = init_res.data,
+      config_path = config_path,
+      readme_path = readme_path,
+      readme_created = readme_created,
+      instructions_created = instructions_created
+    }
+  end
+
+  -- Assuming type == "config"
+  local config = init_res.data
+  local settings = build_settings(config)
 
   return {
     type = "ready",
     config = config,
     settings = settings,
-    config_path = config.config_path,
+    config_path = config_path,
     readme_path = readme_path,
     readme_created = readme_created,
     instructions_created = instructions_created
