@@ -14,39 +14,27 @@ local LABEL_SUM_FROM_ORG = "        From Original HTMLs size: "
 local LABEL_SUM_AI_MD    = "   To AI Optimized Markdown size: "
 local LABEL_SUM_DOCAIFY  = "                 To docaify size: "
 
--- If return a string, means not valid, and it's the message
-local valid = p_utils.validate_aip_version()
-if type(valid) == "string" then
-  return aip.flow.skip(valid)
-end
-
 -- Get the first input (optional name of the config file) or nil
 local input = inputs and inputs[1] or nil
 
--- The input is the eventual config path
-local init_res = p_utils.init_config(input)
+-- Run setup (validates version, initializes config, creates README if needed)
+local setup_info = p_utils.setup(input)
 
-if init_res.type == "message" then
-  local msg = init_res.data .. "\n\n(Alt click on the file path above to open the file in your editor)"
+if setup_info.type == "skip" then
+  return aip.flow.skip(setup_info.skip_reason)
+end
+
+if setup_info.type == "message" then
+  local msg = setup_info.message .. "\n\n(Alt click on the file path above to open the file in your editor)"
   aip.run.pin("msg", 0, { label = "Action Needed:", content = msg} )
   return {
-    init_res = init_res
+    setup_info = setup_info
   }
 end
 
-if init_res.type == "config" then
-  local config = init_res.data
-
-  local settings = p_utils.build_settings(config)
-
-  -- Create README.md from template if it doesn't exist
-  local config_dir = aip.path.parent(config.config_path) or "."
-  local readme_path = config_dir .. "/README.md"
-  if not aip.path.exists(readme_path) then
-    local readme_template_path = CTX.AGENT_FILE_DIR .. "/config/readme-template.md"
-    local readme_content = aip.file.load(readme_template_path).content
-    aip.file.save(readme_path, readme_content)
-  end
+if setup_info.type == "ready" then
+  local config = setup_info.config
+  local settings = setup_info.settings
 
   aip.run.pin("fetch-slim", 0, { label = LABEL_FETCH_SLIM, content = "⏸ Queued"})
   aip.run.pin("augm", 1,       { label = LABEL_AUGMENT, content = "⏸ Queued"})
@@ -186,7 +174,7 @@ if init_res.type == "config" then
 
   aip.run.pin("final", 4, { label = LABEL_SUMMARY, content = final_msg})
 else 
-  print("init response unknown", init_res)
+  print("setup_info type unknown", setup_info.type)
 end
 
 

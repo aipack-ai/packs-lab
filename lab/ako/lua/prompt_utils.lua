@@ -155,10 +155,70 @@ function validate_aip_version()
   end
 end
 
+-- SetupInfo type:
+-- {
+--   type: "skip" | "message" | "ready",
+--   skip_reason?: string,        -- when type == "skip"
+--   message?: string,            -- when type == "message"
+--   config?: table,              -- when type == "ready"
+--   settings?: table,            -- when type == "ready"
+--   config_path?: string,        -- when type == "ready"
+--   readme_created?: boolean,    -- when type == "ready"
+-- }
+
+-- Main setup function that handles all initialization logic
+-- `input` can be the path of a json file with the config, or nil for default
+-- Returns SetupInfo
+function setup(input)
+  -- Validate AIP version first
+  local valid = validate_aip_version()
+  if type(valid) == "string" then
+    return {
+      type = "skip",
+      skip_reason = valid
+    }
+  end
+
+  -- Initialize config
+  local init_res = init_config(input)
+
+  if init_res.type == "message" then
+    return {
+      type = "message",
+      message = init_res.data
+    }
+  end
+
+  -- Assuming type == "config"
+  local config = init_res.data
+  local settings = build_settings(config)
+
+  -- Create README.md from template if it doesn't exist
+  local config_dir = aip.path.parent(config.config_path) or "."
+  local readme_path = config_dir .. "/README.md"
+  local readme_created = false
+  if not aip.path.exists(readme_path) then
+    local readme_template_path = CTX.AGENT_FILE_DIR .. "/config/readme-template.md"
+    local readme_content = aip.file.load(readme_template_path).content
+    aip.file.save(readme_path, readme_content)
+    readme_created = true
+  end
+
+  return {
+    type = "ready",
+    config = config,
+    settings = settings,
+    config_path = config.config_path,
+    readme_path = readme_path,
+    readme_created = readme_created
+  }
+end
+
 -- == Return the functions for this module
 return {
   canonicize           = canonicize,
   validate_aip_version = validate_aip_version, 
   init_config          = init_config,
   build_settings       = build_settings,
+  setup                = setup,
 }
