@@ -39,6 +39,15 @@ function init_config(input)
     local config_content = aip.file.load(xp_config_path).content
     aip.file.save(config_path, config_content)
 
+    -- Also create README.md from template next to the config
+    local config_dir = aip.path.parent(config_path) or "."
+    local readme_path = config_dir .. "/README.md"
+    if not aip.path.exists(readme_path) then
+      local readme_template_path = CTX.AGENT_FILE_DIR .. "/config/readme-template.md"
+      local readme_content = aip.file.load(readme_template_path).content
+      aip.file.save(readme_path, readme_content)
+    end
+
     msg = config_edit_msg(config_path)
 
     return {
