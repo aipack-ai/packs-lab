@@ -3,10 +3,5 @@
 
 # NOTE: Uncomment model below to activate it. 
 
-models: ["gpro", "codex"]
+models: ["flash", "haiku", "codex-mini"]
 ```
-
-Why is the sky red? Answer, concise, one sentence. 
-
-==== 
-> Here will be the answer
