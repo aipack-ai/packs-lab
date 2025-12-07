@@ -25,6 +25,14 @@ local models = meta.models
 
 local first_part, second_part = aip.text.split_first_line(prompt_min_meta, "====")
 
+if user_prompt == "" then
+    local relative_prompt_path = aip.path.diff(prompt_file_path, CTX.WORKSPACE_DIR)
+    aip.run.pin("empty-prompt", {
+        label = "Empty Prompt",
+        content = "Edit prompt file\n➜ " .. relative_prompt_path
+    })
+end
+
 local inputs = {}
 
 for _, model in ipairs(models) do
