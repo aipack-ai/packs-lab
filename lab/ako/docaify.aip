@@ -45,6 +45,8 @@ local docaify_path = nil
 local docaify_target_path = settings.config.docaify_target_path
 
 if docaify_target_path then
+  docaify_target_path = p_utils.resolve_target_path(docaify_target_path, settings)
+
   -- Check if it ends with .md (file path) or not (folder path)
   if docaify_target_path:match("%.md$") then
     docaify_path = docaify_target_path

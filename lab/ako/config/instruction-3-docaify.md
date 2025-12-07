@@ -2,6 +2,7 @@ With all of this content, create a very concise, dry, but complete single docume
 
 Guidelines for the single:
 - Create very concise, dry, but complete API documentation
+- Make sure you capture all types, function signatures, with their return types (concise but complete)
 - For scripting languages, like JavaScript, TypeScript, and Python, use TypeScript type definitions to express types and function signatures
 - For typed languages, use the language typing system
 - Remove redundant explanations, verbosity, and unnecessary descriptions

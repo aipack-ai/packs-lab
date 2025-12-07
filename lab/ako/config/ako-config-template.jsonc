@@ -4,13 +4,12 @@
 
 //// Rust library
 // {
-//                "out_dir": "$ako_config_dir/out",
+//           "out_base_dir": "$ako_config_dir/out",
 // // -- Fetch & Slim
 //          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
 //               "base_url": "https://docs.rs/lopdf/0.38.0/lopdf/",
 //             "first_page": "https://docs.rs/lopdf/0.38.0/lopdf/",
 //              "max_pages": 10,
-// //   "fetch_filter_path": "/base/path/only/",
 // // "fetch_exclude_globs": ["**/{debug,llms,changelog}*"],
 // // -- Clean & Augment
 //             "do_augment": true,
@@ -24,5 +23,5 @@
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-// // "docaify_target_path": ".doc-libs/lopdf-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+//    "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md"	
 // }

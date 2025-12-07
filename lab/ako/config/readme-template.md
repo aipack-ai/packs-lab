@@ -20,7 +20,7 @@ The primary configuration is defined in `ako-config.jsonc`.
 
 The ako-config.jsonc file supports the following options:
 
-- `out_dir`: Output directory for processed files. Supports `$ako_config_dir/` prefix to reference the config directory.
+- `out_base_dir`: The base directory for all processed outputs. Supports `$ako_config_dir/` prefix to reference the config directory. The final output directory structure will be `<out_base_dir>/<canonical_name>/...`.
 - `do_fetch_slim`: (default: true) Enable or skip the fetch/slim step. Set to false to skip if data is already there.
 - `base_url`: Base URL for web-based documentation (use for fetching from websites).
 - `base_dir`: Base directory for local file processing (use for processing local HTML files).
@@ -38,7 +38,7 @@ The ako-config.jsonc file supports the following options:
 - `llms_model`: Model to use for LLM index generation.
 - `do_docaify`: (default: true) Enable single document consolidation (docaify).
 - `docaify_model`: Model to use for docaify.
-- `docaify_target_path`: Optional custom output path for the docaified document (by default in `$ako_out_dir/5-docaify/doc-for-llm.md`).
+- `docaify_target_path`: Optional custom output path for the docaified document. Supports `$ako_out_dir/` prefix. `$ako_out_dir` refers to the generated data directory (`<out_base_dir>/<canonical_name>`). (By default in `$ako_out_dir/5-docaify-md/doc-for-llm.md`).
 
 ## Example Configurations
 
@@ -48,7 +48,7 @@ The following examples are available for reference. Copy the desired block into 
 
 ```jsonc
 {
-               "out_dir": "$ako_config_dir/out",
+          "out_base_dir": "$ako_config_dir/out",
 // -- Fetch & Slim
          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
               "base_url": "https://cookbook.openai.com/examples/",
@@ -68,7 +68,7 @@ The following examples are available for reference. Copy the desired block into 
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
-// "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+   "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md" // this will be the default if not present
 }
 ```
 
@@ -76,7 +76,7 @@ The following examples are available for reference. Copy the desired block into 
 
 ```jsonc
 {
-               "out_dir": "$ako_config_dir/out",
+          "out_base_dir": "$ako_config_dir/out",
 // -- Fetch & Slim
          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
               "base_url": "https://www.alchemy.com/docs/",
@@ -96,7 +96,7 @@ The following examples are available for reference. Copy the desired block into 
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
-// "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+   "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md" // this will be the default if not present
 }
 ```
 
@@ -104,7 +104,7 @@ The following examples are available for reference. Copy the desired block into 
 
 ```jsonc
 {
-               "out_dir": "$ako_config_dir/out",
+          "out_base_dir": "$ako_config_dir/out",
 // -- Fetch & Slim
          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
               "base_dir": "path/to/dir/",
@@ -123,7 +123,7 @@ The following examples are available for reference. Copy the desired block into 
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
-// "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+   "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md" // this will be the default if not present
 }
 ```
 
@@ -131,7 +131,7 @@ The following examples are available for reference. Copy the desired block into 
 
 ```jsonc
 {
-               "out_dir": "$ako_config_dir/out",
+          "out_base_dir": "$ako_config_dir/out",
 // -- Fetch & Slim
          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
               "base_url": "https://tauri.app/reference/",
@@ -151,7 +151,7 @@ The following examples are available for reference. Copy the desired block into 
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
-// "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+   "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md" // this will be the default if not present
 }
 ```
 
@@ -159,7 +159,7 @@ The following examples are available for reference. Copy the desired block into 
 
 ```jsonc
 {
-               "out_dir": "$ako_config_dir/out",
+          "out_base_dir": "$ako_config_dir/out",
 // -- Fetch & Slim
          "do_fetch_slim": true, // allows skipping the fetch/slim step (assumes the data is already there)
               "base_url": "https://docs.imfusion.com/cppsdk/",
@@ -178,6 +178,6 @@ The following examples are available for reference. Copy the desired block into 
 // -- docaify (single doc consolidation)
             "do_docaify": true,
          "docaify_model": "gemini-flash-latest",
-// "docaify_target_path": ".doc-libs/lib_name-api-reference-for-llm.md",	// Optional - By default in `$ako_out_dir/5-docaify/doc-for-llm.md`)
+   "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md" // this will be the default if not present
 }
 ```

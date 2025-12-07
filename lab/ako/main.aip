@@ -143,16 +143,22 @@ if setup_info.type == "ready" then
 
   -- Get docaify file size if it exists
   local docaify_size_fmt = nil
-  local docaify_path = settings.dir_5_docaify .. "/doc-for-llm.md"
-  -- Check if custom docaify_target_path was specified
-  if settings.config.docaify_target_path then
-    if settings.config.docaify_target_path:match("%.md$") then
-      docaify_path = settings.config.docaify_target_path
+  local docaify_target_path = settings.config.docaify_target_path
+  
+  local docaify_path
+  
+  if docaify_target_path then
+    docaify_target_path = p_utils.resolve_target_path(docaify_target_path, settings)
+    
+    if docaify_target_path:match("%.md$") then
+      docaify_path = docaify_target_path
     else
       local base_data_dir_obj = aip.path.parse(settings.base_data_dir)
       local lib_name = base_data_dir_obj.stem or "lib"
-      docaify_path = settings.config.docaify_target_path .. "/" .. lib_name .. "-doc-for-llm.md"
+      docaify_path = docaify_target_path .. "/" .. lib_name .. "-doc-for-llm.md"
     end
+  else
+    docaify_path = settings.dir_5_docaify .. "/doc-for-llm.md"
   end
   if aip.path.exists(docaify_path) then
     local docaify_info = aip.file.info(docaify_path)

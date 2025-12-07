@@ -68,19 +68,19 @@ function init_config(input)
   return res
 end
 
--- Resolves out_dir, supporting $ako_config_dir/ prefix
+-- Resolves out_base_dir, supporting $ako_config_dir/ prefix
 -- $ako_config_dir/ is replaced with the directory containing the ako-config.jsonc file
-function resolve_out_dir(config)
-  local out_dir = config.out_dir
+function resolve_out_base_dir(config)
+  local out_base_dir = config.out_base_dir
   
-  if out_dir and out_dir:sub(1, 16) == "$ako_config_dir/" then
+  if out_base_dir and out_base_dir:sub(1, 16) == "$ako_config_dir/" then
     -- Get the directory of the config file
     local config_dir = aip.path.parent(config.config_path) or "."
     -- Replace the prefix with the actual directory
-    out_dir = config_dir .. "/" .. out_dir:sub(17)
+    out_base_dir = config_dir .. "/" .. out_base_dir:sub(17)
   end
   
-  return out_dir
+  return out_base_dir
 end
 
 -- Build the settings from a config data
@@ -91,14 +91,14 @@ function build_settings(config)
   local base_data_dir = nil
   local base_url_path_prefix = nil
   
-  -- Resolve out_dir with potential $ako_config_dir/ prefix
-  local out_dir = resolve_out_dir(config)
+  -- Resolve out_base_dir with potential $ako_config_dir/ prefix
+  local out_base_dir = resolve_out_base_dir(config)
   
   if config.base_url then
     local url_obj   = aip.web.parse_url(config.base_url)
     -- Use canonicize to create folder name from host + path
     local canonical_name = canonicize(url_obj.host .. (url_obj.path or ""))
-    base_data_dir = out_dir .. "/" .. canonical_name
+    base_data_dir = out_base_dir .. "/" .. canonical_name
     src_type = "web"
     
     -- Extract path part from base_url to be used as a prefix to strip off from fetched URLs' paths
@@ -113,7 +113,7 @@ function build_settings(config)
   elseif config.base_dir then
     src_type = "file"
     local base_dir_obj = aip.path.parse(config.base_dir)
-    base_data_dir = out_dir .. "/" .. base_dir_obj.stem
+    base_data_dir = out_base_dir .. "/" .. base_dir_obj.stem
   else
     error("ako-config.jsonc must have base_url or _base_dir")
   end
@@ -122,6 +122,7 @@ function build_settings(config)
     src_type        = src_type,
     config          = config,
 
+    out_base_dir    = out_base_dir,
     base_data_dir   = base_data_dir,
     base_url_path_prefix = base_url_path_prefix, -- nil for src_type="file"
     dir_0_original  = base_data_dir .. "/0-original",
@@ -135,6 +136,26 @@ function build_settings(config)
   return settings
 
 end
+
+-- Resolves target paths supporting $ako_out_dir/ prefix
+-- $ako_out_dir/ is replaced with the resolved base_data_dir (from build_settings)
+function resolve_target_path(target_path, settings)
+  if target_path == nil or type(target_path) ~= "string" then
+    return nil
+  end
+  
+  local resolved_path = target_path
+  
+  if resolved_path:sub(1, 13) == "$ako_out_dir/" then
+    -- $ako_out_dir now maps to base_data_dir (which includes the canonical name folder)
+    local out_dir = settings.base_data_dir or "." 
+    -- Replace the prefix with the actual directory
+    resolved_path = out_dir .. "/" .. resolved_path:sub(14)
+  end
+  
+  return resolved_path
+end
+
 
 -- Returns
 -- true if it is valid
@@ -271,4 +292,5 @@ return {
   setup                     = setup,
   ensure_instruction_files  = ensure_instruction_files,
   load_instruction          = load_instruction,
+  resolve_target_path       = resolve_target_path,
 }
