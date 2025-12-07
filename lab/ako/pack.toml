@@ -2,7 +2,7 @@
 [pack]
 namespace = "lab" # aipack.ai lab namespace
 name      = "ako"      # pack name (so aip install lab@ako)
-version   = "0.1.1-WIP"
+version   = "0.2.0-WIP"
 
 license  = "MIT or Apache 2"
 homepage = "https://aipack.ai/"
