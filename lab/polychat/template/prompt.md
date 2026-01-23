@@ -1,7 +1,6 @@
 ```yaml
 #!meta
 
-# NOTE: Uncomment model below to activate it. 
-
-models: ["flash", "haiku", "codex-mini"]
+# Models will be run in parallel (AIPack aliases or full name)
+models: ["flash", "haiku", "opus", "gpro", "gpt"]
 ```

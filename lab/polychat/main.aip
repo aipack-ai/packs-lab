@@ -2,11 +2,14 @@
 
 ```lua
 
-local default_prompt_absolute_dir  = CTX.WORKSPACE_AIPACK_DIR .. "/.prompt/" .. CTX.PACK_IDENTITY
+-- Get the prompt file for the the user
+local prompt_folder = CTX.PACK_IDENTITY or "lab-polychat" -- allow to run without pack identity
+local default_prompt_absolute_dir  = CTX.WORKSPACE_AIPACK_DIR .. "/.prompt/" .. prompt_folder
 local default_prompt_file_path     = default_prompt_absolute_dir .. "/polychat-prompt.md"
 
 local prompt_file_path = default_prompt_file_path
 
+-- Create (if needed) and load the prompt file
 local prompt_file = nil
 
 if aip.path.exists(prompt_file_path) then
@@ -17,6 +20,7 @@ else
     prompt_file = aip.file.load(prompt_file_path)
 end
 
+-- Extract the meta data
 local meta, prompt_min_meta = aip.md.extract_meta(prompt_file.content)
 
 local user_prompt = aip.text.trim(prompt_min_meta)
@@ -38,13 +42,15 @@ local inputs = {}
 for _, model in ipairs(models) do
     local disp_prompt = aip.text.truncate(user_prompt, 64, "...")
     local input = {
+    		-- For display in the TUI
         _display = model .. ": \n" .. disp_prompt,
+        -- The model to be used
         model = model
     }
     table.insert(inputs, input)
 end
 
-
+-- Allow to reshape the inputs, set concurrency, and before_all prompt
 return aip.flow.before_all_response({
     inputs = inputs,
     options = {
@@ -62,18 +68,21 @@ return aip.flow.before_all_response({
 local model       = input.model 
 local user_prompt = before_all.user_prompt
 
+-- Assert we have it all
 if model == nil then
     return aip.flow.skip("No model configured, so skipping")
 end
-
 if user_prompt == "" then 
   return aip.flow.skip("No user prompt, so skipping")
 end
 
+-- Set the task label on the TUI
 aip.task.set_label(model)
 
+-- Return the data response with the model override
 return aip.flow.data_response({
     options = {
+    		-- This is what make this task use this model
         model = model,
     }, 
     data = {
