@@ -22,6 +22,7 @@ end
 
 -- Extract the meta data
 local meta, prompt_min_meta = aip.md.extract_meta(prompt_file.content)
+local options = aip.agent.extract_options(meta) or {}
 
 local user_prompt = aip.text.trim(prompt_min_meta)
 
@@ -50,12 +51,13 @@ for _, model in ipairs(models) do
     table.insert(inputs, input)
 end
 
+-- Override the options
+options.input_concurrency = #inputs
+
 -- Allow to reshape the inputs, set concurrency, and before_all prompt
 return aip.flow.before_all_response({
     inputs = inputs,
-    options = {
-        input_concurrency = #inputs
-    }, 
+    options = options, 
     before_all = {
         user_prompt = user_prompt
     }
@@ -79,12 +81,12 @@ end
 -- Set the task label on the TUI
 aip.task.set_label(model)
 
+-- override options
+options.model = model
+
 -- Return the data response with the model override
 return aip.flow.data_response({
-    options = {
-    		-- This is what make this task use this model
-        model = model,
-    }, 
+    options = options, 
     data = {
         user_prompt = user_prompt
     }
