@@ -25,6 +25,9 @@ This set of documents defines the standards and best practices for creating and 
 - **[doc-04-ssite.md](doc-04-ssite.md)**: ssite Orchestration
   Deployment and local development workflows using `ssite.toml`.
 
+- **[doc-05-cdk.md](doc-05-cdk.md)**: Infrastructure as Code (AWS CDK)
+  Infrastructure provisioning for S3, CloudFront, and Route 53.
+
 ## Runtime Requirement
 
 - **Node.js**: 25.9 or higher (required for modern ESM and build features).
