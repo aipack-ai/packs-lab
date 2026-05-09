@@ -3,6 +3,11 @@
 .*
 !.gitignore
 
+# Ignore all file/paths starting with _, except in src/
+_*
+!**/src/**/_*/
+!**/src/**/_*
+
 # -- AIPack
 # By default ignore all .aipack path or files
 # (this will also ignore the .aipack package files)
@@ -79,7 +84,7 @@ cdk.out/
 *.bmp
 
 # -- others
-# Allows .env (make sure only dev info) 
+# Allows .env (make sure only dev info)
 # !.env # Commented by default
 
 # Allow vscode
