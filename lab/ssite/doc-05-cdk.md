@@ -24,6 +24,18 @@ cd cdk
 cdk init app --language typescript
 ```
 
+### Root .gitignore Recommendations
+
+Add the following to the project's root `.gitignore` to prevent committing generated CDK build artifacts.
+
+```
+# -- cdk
+cdk/**/*.js
+!jest.config.js
+!cdk/cloudfront-functions/*.js
+cdk/**/*.d.ts
+```
+
 After initialization, you will have a directory structure with `bin/`, `lib/`, and a `cdk.json` file. The `cdk.json` file will contain many `@aws-cdk/*` context flags; these are feature flags managed by the CDK CLI and do not need to be manually edited unless specific behavior overrides are required.
 
 ## Customization and Implementation
@@ -72,7 +84,19 @@ const app = new cdk.App();
 new CdkStack(app, STACK_ID, {});
 ```
 
-### 3. Update lib/cdk-stack.ts
+### 3. Create lib/config.ts
+
+Define the project-specific constants in a central location.
+
+```typescript
+export const AWS_ACCOUNT_NUMBER = "__AWS_ACCOUNT_NUMBER__";
+export const WEBSITE_ID = "__WEBSITE_ID__";
+export const DOMAIN_NAME = "__DOMAIN_NAME__";
+export const DEPLOY_USER = "__DEPLOY_USER__";
+export const CDK_USER = "__CDK_USER__";
+```
+
+### 4. Update lib/cdk-stack.ts
 
 The main stack definition containing the logic for S3, CloudFront, and DNS.
 
@@ -87,10 +111,7 @@ import * as route53Targets from 'aws-cdk-lib/aws-route53-targets';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3Deploy from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
-
-const ACCOUNT_ID = "__AWS_ACCOUNT_NUMBER__";
-const WEBSITE_ID = "__WEBSITE_ID__";
-const DOMAIN_NAME = "__DOMAIN_NAME__";
+import { AWS_ACCOUNT_NUMBER, DEPLOY_USER, DOMAIN_NAME, WEBSITE_ID } from './config';
 
 export const STACK_ID = `${WEBSITE_ID}-stack`;
 
@@ -98,7 +119,7 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, {
       ...props, env: {
-        account: ACCOUNT_ID,
+        account: AWS_ACCOUNT_NUMBER,
         region: 'us-east-1'
       }
     });
@@ -115,7 +136,7 @@ export class CdkStack extends cdk.Stack {
     });
 
     // Grant access to the deployment user
-    const deployUser = iam.User.fromUserArn(this, 'DeployUser', `arn:aws:iam::${ACCOUNT_ID}:user/__DEPLOY_USER__`);
+    const deployUser = iam.User.fromUserArn(this, 'DeployUser', `arn:aws:iam::${AWS_ACCOUNT_NUMBER}:user/${DEPLOY_USER}`);
     siteBucket.grantReadWrite(deployUser);
 
     const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
@@ -129,7 +150,7 @@ export class CdkStack extends cdk.Stack {
 
     const cfFunction = new cloudFront.Function(this, 'CFFunctionSiteBase', {
       functionName: `${WEBSITE_ID}-uri-rewrite`,
-      code: cloudFront.FunctionCode.fromFile({ filePath: 'cloudfront-functions/aipack_ai_cf_function_01.js' }),
+      code: cloudFront.FunctionCode.fromFile({ filePath: 'cloudfront-functions/site_name_cf_function_01.js' }),
     });
 
     const distribution = new cloudFront.Distribution(this, 'SiteDistribution', {
@@ -158,7 +179,7 @@ export class CdkStack extends cdk.Stack {
 }
 ```
 
-### 4. Create cloudfront-functions/aipack_ai_cf_function_01.js
+### 5. Create cloudfront-functions/site_name_cf_function_01.js
 
 The edge logic for handling clean URLs.
 
