@@ -1,0 +1,31 @@
+# Output
+
+```lua
+-- Loop-aware sub-agent for pro@coder
+-- Handles start (pre) and end (post) events to manage a prompt loop via <NEXT_PROMPT> tags
+
+local stage = input.stage            -- "pre" or "post"
+local workbench = input.coder_workbench
+
+-- Compute common paths once
+local loop_paths = nil
+if workbench ~= nil then
+  local loop_util = require("loop")
+  loop_paths = loop_util.get_loop_paths(workbench)
+end
+
+-- ---- START (pre) stage ----
+if stage == "pre" then
+  local loop_start = require("loop-start").loop_start
+  return loop_start({ workbench = workbench, inputs = input, loop_paths = loop_paths })
+  
+-- ---- END (post) stage ----
+elseif stage == "post" then
+  local loop_end = require("loop-end").loop_end
+  return loop_end({ workbench = workbench, inputs = input, loop_paths = loop_paths })
+else
+  -- Unknown stage, do nothing
+  return { success = true }
+end
+
+```

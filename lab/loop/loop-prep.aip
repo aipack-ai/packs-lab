@@ -1,0 +1,43 @@
+# Data
+
+```lua
+local loop_prep = require("loop-prep")
+local loop_dir = input.loop_dir
+local data = loop_prep.get_prep_data(loop_dir, CTX.AGENT_FILE_DIR)
+return data
+```
+
+# Instruction
+
+Given the following original user prompt and the loop rules template, generate both the `loop-instructions.md` content and the first `prompt-next.md` content. 
+
+The content should retain all details of the original prompt and structure the loop instructions suitable for multiple iterative runs, following the guidelines in the loop rules. Then, generate a suitable first prompt for the loop to start executing the task.
+
+---
+
+**Original User Prompt:**
+
+{{data.original_prompt}}
+
+---
+
+---
+
+**Loop Rules Template:**
+
+{{data.loop_rules}}
+
+--- 
+
+Now, produce the output in two parts separated by a line containing only `=====PROMPT=====`. Before that line, output the loop instructions exactly as they should appear in `loop-instructions.md`. After that line, output the content for `prompt-next.md` without any extra commentary, code fences, or preamble. Just the respective file contents.
+
+For the first prompt-next.md focused on the first step. 
+
+# Output
+
+```lua
+local loop_prep = require("loop-prep")
+local loop_dir = input.loop_dir
+loop_prep.save_prep_files(ai_response.content, loop_dir)
+return { success = true }
+```
