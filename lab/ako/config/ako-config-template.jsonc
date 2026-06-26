@@ -17,11 +17,12 @@
 //            "max_size_kb": 200, // in KB, above which the file will be skipped
 //          "augment_model": "gemini-flash-latest",
 //            "concurrency": 6,
+// //       "final_out_dir": "some/dir",
 // // -- llms index
 //                "do_llms": true,
 //             "llms_model": "gemini-flash-latest",
 // // -- docaify (single doc consolidation)
 //             "do_docaify": true,
 //          "docaify_model": "gemini-flash-latest",
-//    "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md"	
+//    "docaify_target_path": "$ako_out_dir/5-docapi-md/doc-for-llm.md"
 // }

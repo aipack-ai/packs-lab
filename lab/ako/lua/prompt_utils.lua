@@ -118,6 +118,19 @@ function build_settings(config)
     error("ako-config.jsonc must have base_url or _base_dir")
   end
 
+  local canonic_name = base_data_dir:match("[^/]+$")
+  local dir_4_final_md
+  if config.final_out_dir then
+    local resolved_final = resolve_out_base_dir({
+      out_base_dir = config.final_out_dir,
+      config_path  = config.config_path
+    })
+    dir_4_final_md = resolved_final .. "/" .. canonic_name
+  else
+    dir_4_final_md = base_data_dir .. "/4-final-md"
+  end
+
+
   local settings = {
     src_type        = src_type,
     config          = config,
@@ -129,7 +142,7 @@ function build_settings(config)
     dir_1_slim_html = base_data_dir .. "/1-slim-html",
     dir_2_raw_md    = base_data_dir .. "/2-raw-md",
     dir_3_sum_md    = base_data_dir .. "/3-sum-md",
-    dir_4_final_md  = base_data_dir .. "/4-final-md",
+    dir_4_final_md  = dir_4_final_md,
     dir_5_docaify   = base_data_dir .. "/5-docaify-md",
   }
 
