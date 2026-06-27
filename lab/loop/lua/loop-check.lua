@@ -92,12 +92,12 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args)
 	return failing_paths
 end
 
--- Returns the path to the fix-prompt.md file inside the loop directory.
+-- Returns the path to the prompt-fix.md file inside the loop directory.
 local function fix_prompt_path(loop_dir)
-	return loop_dir .. "/check/fix-prompt.md"
+	return loop_dir .. "/check/prompt-fix.md"
 end
 
--- Checks whether fix mode is active by looking for fix-prompt.md.
+-- Checks whether fix mode is active by looking for prompt-fix.md.
 -- Returns fix_mode (boolean) and, if active, the trimmed content of the fix prompt.
 function loop_check.is_fix_mode(loop_dir)
 	local path = fix_prompt_path(loop_dir)

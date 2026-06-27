@@ -70,7 +70,7 @@ local function loop_start(params)
 		end
 	end
 
-	-- Check if fix-prompt.md exists (indicating fix mode)
+	-- Check if prompt-fix.md exists (indicating fix mode)
 	local fix_mode, fix_prompt_content = loop_check.is_fix_mode(paths.dir)
 	local new_prompt = nil
 	if fix_mode then
