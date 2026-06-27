@@ -66,10 +66,6 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args)
 				end
 			end
 			-- Build a display string for error messages
-			local full_cmd = c.cmd
-			if #cmd_args > 0 then
-				full_cmd = full_cmd .. " " .. table.concat(cmd_args, " ")
-			end
 			local result = aip.cmd.exec(c.cmd, cmd_args)
 			if not result.error then
 				local combined = (result.stdout or "") .. "\n" .. (result.stderr or "")
@@ -121,7 +117,7 @@ function loop_check.update_fix_mode(loop_dir, failing_paths)
 	if #failing_paths > 0 then
 		aip.file.ensure_dir(fix_dir)
 		local lines = {}
-		table.insert(lines, "Build/test/link checks have FAILED.")
+		table.insert(lines, "Build/test/lint checks have FAILED.")
 		table.insert(lines, "")
 
 		-- Collect source files referenced in the error output.
