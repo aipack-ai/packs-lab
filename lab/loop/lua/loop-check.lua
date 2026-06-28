@@ -5,7 +5,7 @@ function loop_check.get_check_flags(agent_config)
 	return {
 		build = value_or(agent_config.build, false),
 		test  = value_or(agent_config.test, false),
-		lint  = value_or(agent_config.clippy, false),
+		lint  = value_or(agent_config.lint, value_or(agent_config.clippy, false)),
 	}
 end
 

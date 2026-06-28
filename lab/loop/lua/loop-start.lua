@@ -111,7 +111,7 @@ local function loop_start(params)
 		if check_flags.test then
 			table.insert(enabled_checks, "cargo test")
 		end
-		if check_flags.clippy then
+		if check_flags.lint then
 			table.insert(enabled_checks, "cargo clippy")
 		end
 
