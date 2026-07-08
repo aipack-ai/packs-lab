@@ -17,7 +17,7 @@ end
 -- List of all possible check definitions.
 local all_checks = {
 	{ key = "build", cmd = "cargo", file_name = "cargo-build.txt", args = { "build", "--examples" } },
-	{ key = "test",  cmd = "cargo", file_name = "cargo-test.txt",  args = { "test", "--", "--nocapture" } },
+	{ key = "test",  cmd = "cargo", file_name = "cargo-test.txt",  args = { "test", "--workspace", "--", "--nocapture" } },
 	{ key = "lint",  cmd = "cargo", file_name = "cargo-lint.txt",  args = { "clippy", "--all-targets", "--", "-D", "warnings" } },
 }
 
