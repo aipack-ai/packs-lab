@@ -13,6 +13,7 @@ local function get_loop_paths(wb)
 		original_prompt = dir .. "/prompt-original.md",
 		instructions = dir .. "/loop-instructions.md",
 		prompt = dir .. "/prompt-next.md",
+		rules = dir .. "/_loop-rules.md",
 	}
 end
 

@@ -24,6 +24,15 @@ local function loop_start(params)
 	local paths = params.loop_paths or loop.get_loop_paths(workbench)
 
 	aip.file.ensure_dir(paths.dir)
+	if not aip.file.exists(paths.rules) then
+		local loop_rules_template_path = aip.path.join(CTX.AGENT_FILE_DIR, "templates/loop-rules.md")
+		local loop_rules_template = aip.file.load(loop_rules_template_path)
+		if loop_rules_template and loop_rules_template.content then
+			aip.file.save(paths.rules, loop_rules_template.content)
+		else
+			aip.run.pin("loop-rules-error", "Failed to create cached _loop-rules.md")
+		end
+	end
 
 	-- Manage original user prompt: detect changes and regenerate loop instructions if needed
 	local coder_prompt = value_or(input.coder_prompt, "")
@@ -124,8 +133,7 @@ local function loop_start(params)
 	local coder_params = value_or(input.coder_params, {})
 	local new_context_globs_post = value_or(coder_params.context_globs_post, {})
 
-	local loop_rules_path = aip.path.join(CTX.AGENT_FILE_DIR, "templates/loop-rules.md")
-	table.insert(new_context_globs_post, loop_rules_path)
+	table.insert(new_context_globs_post, paths.rules)
 	if aip.file.exists(paths.instructions) then
 		table.insert(new_context_globs_post, paths.instructions)
 	end
