@@ -68,7 +68,7 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args, code_dir
 			-- Build a display string for error messages
 			local exec_cmd = c.cmd
 			local exec_args = cmd_args
-			local exec_options = code_dir and { cwd = code_dir } or nil
+			local exec_options = is_not_null(code_dir) and { cwd = code_dir } or nil
 			local result = aip.cmd.exec(exec_cmd, exec_args, exec_options)
 			if not result.error then
 				local combined = (result.stdout or "") .. "\n" .. (result.stderr or "")

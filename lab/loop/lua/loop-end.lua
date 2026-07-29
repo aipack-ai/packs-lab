@@ -11,6 +11,7 @@ local function loop_end(params)
 	-- Read check flags from agent config (build, test, clippy)
 	local agent_config = value_or(inputs.agent_config, {})
 	local check_flags = loop_check.get_check_flags(agent_config)
+	local code_dir = agent_config.code_dir
 
 	-- Workbench absent: skip
 	if workbench == nil then
@@ -25,7 +26,7 @@ local function loop_end(params)
 	local data_check_dir = loop_check.get_data_check_dir(workbench)
 	if data_check_dir and loop_check.any_check_enabled(check_flags) then
 		local check_args = agent_config.args
-		local failing_paths = loop_check.run_checks(check_flags, data_check_dir, check_args)
+		local failing_paths = loop_check.run_checks(check_flags, data_check_dir, check_args, code_dir)
 		local fix_result = loop_check.update_fix_mode(loop_paths.dir, failing_paths)
 		loop_check.cleanup_empty_dir(data_check_dir)
 		if fix_result.should_redo then
@@ -42,6 +43,12 @@ local function loop_end(params)
 	for _, resp in ipairs(responses) do
 		local extruded = value_or(resp.content_extruded, "")
 		local tags = aip.tag.extract(extruded, "NEXT_PROMPT")
+		if #tags == 0 then
+			local content = value_or(resp.content, "")
+			if content ~= extruded then
+				tags = aip.tag.extract(content, "NEXT_PROMPT")
+			end
+		end
 		for _, tag in ipairs(tags) do
 			table.insert(next_tags, tag.content or "")
 		end
