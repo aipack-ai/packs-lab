@@ -39,7 +39,7 @@ function loop_check.get_data_check_dir(workbench)
 	return workbench.data_dir .. "/check"
 end
 
-function loop_check.run_checks(check_flags, data_check_dir, check_args)
+function loop_check.run_checks(check_flags, data_check_dir, check_args, code_dir)
 	local failing_paths = {}
 	check_args = check_args or {}
 
@@ -66,7 +66,10 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args)
 				end
 			end
 			-- Build a display string for error messages
-			local result = aip.cmd.exec(c.cmd, cmd_args)
+			local exec_cmd = c.cmd
+			local exec_args = cmd_args
+			local exec_options = code_dir and { cwd = code_dir } or nil
+			local result = aip.cmd.exec(exec_cmd, exec_args, exec_options)
 			if not result.error then
 				local combined = (result.stdout or "") .. "\n" .. (result.stderr or "")
 				if result.exit ~= 0 then

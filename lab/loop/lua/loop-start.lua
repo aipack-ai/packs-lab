@@ -10,6 +10,7 @@ local function loop_start(params)
 	-- Read check flags from agent config (build, test, clippy)
 	local agent_config = value_or(input.agent_config, {})
 	local check_flags = loop_check.get_check_flags(agent_config)
+	local code_dir = agent_config.code_dir
 
 	-- Workbench absent: skip with a note
 	if workbench == nil then
@@ -73,7 +74,7 @@ local function loop_start(params)
 	if loop_check.any_check_enabled(check_flags) then
 		local data_check_dir = loop_check.get_data_check_dir(workbench)
 		if data_check_dir then
-			local failing_paths = loop_check.run_checks(check_flags, data_check_dir)
+			local failing_paths = loop_check.run_checks(check_flags, data_check_dir, nil, code_dir)
 			-- Update fix mode state; we ignore should_redo because we handle prompt forwarding here
 			loop_check.update_fix_mode(paths.dir, failing_paths)
 		end
