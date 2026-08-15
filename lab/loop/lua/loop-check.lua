@@ -16,7 +16,7 @@ end
 
 -- List of all possible check definitions.
 local all_checks = {
-	{ key = "build", cmd = "cargo", file_name = "cargo-build.txt", args = { "build", "--examples" } },
+	{ key = "build", cmd = "cargo", file_name = "cargo-build.txt", args = { "build" } },
 	{ key = "test",  cmd = "cargo", file_name = "cargo-test.txt",  args = { "test", "--workspace", "--", "--nocapture" } },
 	{ key = "lint",  cmd = "cargo", file_name = "cargo-lint.txt",  args = { "clippy", "--all-targets", "--", "-D", "warnings" } },
 }
@@ -72,6 +72,15 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args, code_dir
 			local result = aip.cmd.exec(exec_cmd, exec_args, exec_options)
 			if not result.error then
 				local combined = (result.stdout or "") .. "\n" .. (result.stderr or "")
+				local output = aip.text.trim(combined)
+				if not output or output == "" then
+					output = "No command output."
+				end
+				local status = result.exit == 0 and "Passed" or "Failed with exit code " .. tostring(result.exit)
+				aip.run.pin("loop-check-" .. c.key, {
+					label = exec_cmd .. " " .. table.concat(exec_args, " "),
+					content = status .. "\n\n" .. output,
+				})
 				if result.exit ~= 0 then
 					aip.file.ensure_dir(data_check_dir)
 					aip.file.save(file_path, combined)
