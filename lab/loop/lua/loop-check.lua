@@ -76,10 +76,11 @@ function loop_check.run_checks(check_flags, data_check_dir, check_args, code_dir
 				if not output or output == "" then
 					output = "No command output."
 				end
-				local status = result.exit == 0 and "Passed" or "Failed with exit code " .. tostring(result.exit)
+				local label = c.key .. " " .. (result.exit == 0 and "passed" or "failed")
+				local full_cmd = exec_cmd .. " " .. table.concat(exec_args, " ")
 				aip.run.pin("loop-check-" .. c.key, {
-					label = exec_cmd .. " " .. table.concat(exec_args, " "),
-					content = status .. "\n\n" .. output,
+					label = label,
+					content = "command: " .. full_cmd .. "\n\n" .. output,
 				})
 				if result.exit ~= 0 then
 					aip.file.ensure_dir(data_check_dir)
