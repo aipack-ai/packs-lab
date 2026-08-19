@@ -4,6 +4,8 @@
 local p_utils = require("prompt_utils")
 local f_utils = require("fetch_utils")
 
+local input = inputs and inputs[1] or nil
+
 -- input is nil or the config_path
 local init_res = p_utils.init_config(input)
 
