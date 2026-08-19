@@ -28,7 +28,7 @@ aip install lab@ako
 #                 to have terminal + file explorer/viewer in one interface.
 
 # Run the pack (make sure to have your API keys)
-aip run lab@ako --xp-tui
+aip run lab@ako
 
 # --xp-tui is the new Terminal UI (will be default from 0.8.0)
 ```
@@ -51,7 +51,7 @@ cd aipack-lab
 #                 to have terminal + file explorer/viewer in one interface.
 
 # Run the agent from folder
-aip run lab/ako --xp-tui
+aip run lab/ako 
 
 # --xp-tui is the new Terminal UI (will be default from 0.8.0)
 ```
