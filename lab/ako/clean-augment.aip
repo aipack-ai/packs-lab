@@ -135,9 +135,11 @@ return {
 
 > Remove `DISABLED` below to send instruction to AI
 
-# Instruction
+# System
 
 {{data.instruction_aug}}
+
+# Instruction
 
 Here is the raw content
 
