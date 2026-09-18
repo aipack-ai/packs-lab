@@ -10,6 +10,8 @@ _the_next_prompt_to_be_executed_
 
 This NEXT_PROMPT must be be after the udiffx eventual code sections, not be be written in file, but given after so that the agent can extract it. 
 
+IMPORTANT - If missing files, return fast with the `<missing_files>` tag as described in the core instruction, and then include the next `<NEXT_PROMPT>` as `continue the work, the missing files should be present now.`
+
 IMPORTANT - Everytime you need to communicate or ask question, make sure to add to the chat.md so that the next run can get it from there. 
 
 IMPORTANT - Append to chat.md to provide questions and answers. The last `## Request` section is the most recent
